@@ -1,6 +1,6 @@
 #include "Utilities.h"
 
-CanvasPoint convertToCanvasPoint(glm::vec3 vector, glm::vec3 camera);
+CanvasPoint convertToCanvasPoint(glm::vec3 vector, Camera camera);
 
 namespace utilities
 {
@@ -112,7 +112,7 @@ namespace utilities
         return midPoint;
     }
 
-    CanvasTriangle convertToCanvasTriangle(ModelTriangle model, vec3 camera)
+    CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera)
     {
         CanvasTriangle triangle = CanvasTriangle();
 
@@ -125,16 +125,14 @@ namespace utilities
     
 }
 
-CanvasPoint convertToCanvasPoint(glm::vec3 vector, glm::vec3 camera)
+CanvasPoint convertToCanvasPoint(glm::vec3 vector, Camera camera)
 {
-    float f = camera[2];
+    float X = vector[0] - camera.X;
+    float Y = vector[1] - camera.Y;
+    float Z = vector[2] - camera.Z;
 
-    float X = vector[0];
-    float Y = vector[1];
-    float Z = vector[2];
-
-    float canvasX = camera[0] + ( f * X ) / ( f + Z );
-    float canvasY = camera[1] - ( f * Y ) / ( f + Z );
+    float canvasX = ( camera.f * -X ) / ( Z ) + WIDTH/2;
+    float canvasY = ( camera.f * Y ) / ( Z ) + HEIGHT/2;
 
     return CanvasPoint(canvasX, canvasY);
 }

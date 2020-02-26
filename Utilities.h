@@ -3,8 +3,12 @@
 #include <CanvasPoint.h>
 #include <CanvasTriangle.h>
 #include <ModelTriangle.h>
+#include "Camera.hpp"
 
 using namespace glm;
+
+extern const int HEIGHT;
+extern const int WIDTH;
 
 namespace utilities 
 {
@@ -14,5 +18,5 @@ namespace utilities
     std::vector<CanvasPoint> interpolateCanvasPoint(CanvasPoint from, CanvasPoint to, int steps);
 
     CanvasPoint getTriangleMidPoint(CanvasTriangle triangle);
-    CanvasTriangle convertToCanvasTriangle(ModelTriangle point, vec3 camera);
+    CanvasTriangle convertToCanvasTriangle(ModelTriangle point, Camera camera);
 }

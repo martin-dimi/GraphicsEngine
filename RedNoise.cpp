@@ -6,6 +6,7 @@
 #include "DrawUtils.h"
 #include "PPMImage.h"
 #include "OBJFile.h"
+#include "Camera.hpp"
 
 using namespace std;
 using namespace glm;
@@ -20,9 +21,12 @@ void displayImage();
 void paintTexturedTriangle();
 void displayModel();
 
+const int WIDTH = 600;
+const int HEIGHT = 400;
+
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-vec3 camera = vec3(WIDTH/2, HEIGHT/2, -300);
-OBJFile model = OBJFile("cornell-box/cornell-box.mtl", "cornell-box/cornell-box.obj", 50);
+Camera camera = Camera(0, 0, 100, HEIGHT/2);
+OBJFile model = OBJFile("cornell-box/cornell-box.mtl", "cornell-box/cornell-box.obj", 30);
 
 int main(int argc, char* argv[])
 {
@@ -63,12 +67,12 @@ void update()
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_LEFT) camera[0] -= 5;
-    else if(event.key.keysym.sym == SDLK_RIGHT) camera[0] += 5;
-    else if(event.key.keysym.sym == SDLK_UP) camera[1] -= 5;
-    else if(event.key.keysym.sym == SDLK_DOWN) camera[1] += 5;
-    else if(event.key.keysym.sym == SDLK_l) camera[2] += 5;
-    else if(event.key.keysym.sym == SDLK_k) camera[2] -= 5;
+    if(event.key.keysym.sym == SDLK_LEFT) camera.X -= 5;
+    else if(event.key.keysym.sym == SDLK_RIGHT) camera.X += 5;
+    else if(event.key.keysym.sym == SDLK_UP) camera.Y += 5;
+    else if(event.key.keysym.sym == SDLK_DOWN) camera.Y -= 5;
+    else if(event.key.keysym.sym == SDLK_l) camera.Z += 5;
+    else if(event.key.keysym.sym == SDLK_k) camera.Z -= 5;
 
     else if(event.key.keysym.sym == SDLK_c) clear();
     else if(event.key.keysym.sym == SDLK_u) randomTrianlgeOutline();

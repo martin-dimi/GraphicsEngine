@@ -189,7 +189,7 @@ void fillTriangle(CanvasTriangle triangle, PPMImage image, DrawingWindow window)
   }
 }
 
-void loadModel(OBJFile model, glm::vec3 camera, DrawingWindow window)
+void loadModel(OBJFile model, Camera camera, DrawingWindow window)
 {
   for(ModelTriangle modelTriangle: model.faces)
   {
