@@ -107,8 +107,6 @@ namespace utilities
         TexturePoint a = triangle.vertices[0].texturePoint;
         TexturePoint b = triangle.vertices[2].texturePoint;
 
-        // float ratio = midPointHeightDiff / heightDiff - midPointHeightDiff;
-
         float texHeight = b.y - a.y;
         float texWidth  = b.x - a.x;
 
@@ -120,16 +118,6 @@ namespace utilities
 
         return midPoint;
     }
-
-    // CanvasPoint getTriangleMidPoint(CanvasTriangle triangle)
-    // {
-    //     int steps = triangle.vertices[2].y - triangle.vertices[0].y + 1;
-    //     int midStep = triangle.vertices[1].y - triangle.vertices[0].y + 1;
-
-    //     std::vector<CanvasPoint> points = interpolateCanvasPoint(triangle.vertices[0], triangle.vertices[2], steps);
-
-    //     return points[midStep];
-    // }
 
     CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera)
     {

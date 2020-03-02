@@ -37,7 +37,7 @@ void OBJFile::readPallet()
                 int greenChannel = this->normaliseChannel(stof(definition[2]));
                 int blueChannel = this->normaliseChannel(stof(definition[3]));
 
-                Colour colour = Colour(name, redChannel, blueChannel, greenChannel);
+                Colour colour = Colour(name, redChannel, greenChannel, blueChannel);
                 this->pallete[name] = colour;
             }
         }

@@ -204,9 +204,7 @@ void fillTriangle(CanvasTriangle triangle, Colour c, DrawingWindow window, float
 {
   int height = std::ceil( abs(triangle.vertices[0].y - triangle.vertices[1].y) + 1);
 
-  // std::cout << "FROM ::::::::::::::::::::::::::::: " << std::endl;
   std::vector<CanvasPoint> from = utilities::interpolateCanvasPoint(triangle.vertices[0], triangle.vertices[1], height);
-  // std::cout << "TO ::::::::::::::::::::::::::::: " << std::endl;
   std::vector<CanvasPoint> to   = utilities::interpolateCanvasPoint(triangle.vertices[0], triangle.vertices[2], height);
 
   for(int row=0; row < height; row++) 
@@ -215,8 +213,8 @@ void fillTriangle(CanvasTriangle triangle, Colour c, DrawingWindow window, float
     CanvasPoint fromPoint = reverseOrder ? to[row] : from[row];
     CanvasPoint toPoint = reverseOrder ? from[row] : to[row];
     
-    float y = fromPoint.y;
-
+    int y = fromPoint.y;
+    if(y < 0 || y >= HEIGHT-1) continue;
 
     int width = std::ceil(toPoint.x - fromPoint.x  + 1);
     std::vector<CanvasPoint> line = utilities::interpolateCanvasPoint(fromPoint, toPoint, width);
@@ -225,33 +223,14 @@ void fillTriangle(CanvasTriangle triangle, Colour c, DrawingWindow window, float
     {
       CanvasPoint p = line[col];
       int x = p.x;
-      int y = p.y;
 
-      if(y < 0 || y >= HEIGHT-1) continue;
       if(x < 0 || x >= WIDTH-1) continue;
 
       int idx = (y * WIDTH) + x;
-
-      // window.setPixelColour(x, y, c.getPackedInt());
-      // std::cout << "INDEX: " << idx  << "X: " << x << ", Y: " << y << std::endl;
-
-      // if(depthBuffer[idx] != -std::numeric_limits<float>::infinity()) {
-      //   std::cout << "Collision between: DB=" << depthBuffer[idx] << " and Point=" << p.depth << " -- X: " << x << ", Y: " << y << std::endl;
-      // }
-
       if(depthBuffer[idx] > p.depth) 
       {
-        // std::cout << "Overwritting collision between: DB=" << depthBuffer[idx] << " and Point=" << p.depth << " -- IDX: " << idx << ", X: " << x << ", Y: " << y << std::endl;
-
-        // if(depthBuffer[idx] != -std::numeric_limits<float>::infinity()) {
-        //   std::cout << "Overwritting collision between: DB=" << depthBuffer[idx] << " and Point=" << p.depth << " -- IDX: " << idx << ", X: " << x << ", Y: " << y << std::endl;
-        // }
         window.setPixelColour(x, y, c.getPackedInt());
         depthBuffer[idx] = p.depth;
-      } else
-      {
-        // std::cout << "DB: " << depthBuffer[idx] << ", PD: " << 1/p.depth << std::endl;
-        // std::cout << "Index: " << idx << ", X: " << x << ", Y " << y << std::endl;
       }
     }
   }
@@ -261,29 +240,6 @@ void loadModel(OBJFile model, Camera camera, DrawingWindow window, bool showWire
 {
   float* depthBuffer = new float[WIDTH*HEIGHT];
   std::fill_n(depthBuffer, WIDTH*HEIGHT, std::numeric_limits<float>::infinity());
-
-  // for(int i=21; i <= 21; i++) {
-  //     ModelTriangle modelTrangle = model.faces[i];
-  //     CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTrangle, camera);
-
-  //     if(showWireframe)
-  //       drawTriangleOutline(canvasTriangle, canvasTriangle.colour, window);
-  //     else
-  //       drawTriangleFilled(canvasTriangle, canvasTriangle.colour, window, depthBuffer);
-  // }
-
-  // for(int i=24; i <= 24; i++) {
-  //     ModelTriangle modelTrangle = model.faces[i];
-  //     CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTrangle, camera);
-
-  //     if(showWireframe)
-  //       drawTriangleOutline(canvasTriangle, canvasTriangle.colour, window);
-  //     else
-  //       drawTriangleFilled(canvasTriangle, canvasTriangle.colour, window, depthBuffer);
-  // }
-
-
-
 
   for(ModelTriangle modelTriangle: model.faces)
   {
