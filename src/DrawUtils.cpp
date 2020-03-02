@@ -7,6 +7,7 @@
 
 void fillTriangle(CanvasTriangle triangle, Colour c, DrawingWindow window);
 void fillTriangle(CanvasTriangle triangle, PPMImage image, DrawingWindow window);
+void fillTriangle(CanvasTriangle triangle, Colour c, DrawingWindow window, float* depthBuffer);
 
 void drawRedError(DrawingWindow window){
    for(int y=0; y<window.height ;y++) {
@@ -92,7 +93,6 @@ void drawTriangleOutline(CanvasTriangle triangle, Colour c, DrawingWindow window
 
 void drawTriangleFilled(CanvasTriangle triangle, Colour c, DrawingWindow window) 
 {
-
   // Sort verticies
   std::sort(triangle.vertices, triangle.vertices+3, [](CanvasPoint const & a, CanvasPoint const & b) -> bool { return a.y < b.y; } );
 
@@ -100,6 +100,17 @@ void drawTriangleFilled(CanvasTriangle triangle, Colour c, DrawingWindow window)
 
   fillTriangle(CanvasTriangle(triangle.vertices[0], triangle.vertices[1], midPoint), c, window);
   fillTriangle(CanvasTriangle(triangle.vertices[2], midPoint, triangle.vertices[1]), c, window);
+}
+
+void drawTriangleFilled(CanvasTriangle triangle, Colour c, DrawingWindow window, float* depthBuffer) 
+{
+  // Sort verticies
+  std::sort(triangle.vertices, triangle.vertices+3, [](CanvasPoint const & a, CanvasPoint const & b) -> bool { return a.y < b.y; } );
+
+  CanvasPoint midPoint = utilities::getTriangleMidPoint(triangle);
+
+  fillTriangle(CanvasTriangle(triangle.vertices[0], triangle.vertices[1], midPoint), c, window, depthBuffer);
+  fillTriangle(CanvasTriangle(triangle.vertices[2], midPoint, triangle.vertices[1]), c, window, depthBuffer);
 }
 
 void loadImage(PPMImage image, DrawingWindow window) 
@@ -189,17 +200,82 @@ void fillTriangle(CanvasTriangle triangle, PPMImage image, DrawingWindow window)
   }
 }
 
-void loadModel(OBJFile model, Camera camera, DrawingWindow window)
+void fillTriangle(CanvasTriangle triangle, Colour c, DrawingWindow window, float* depthBuffer)
 {
-  for(ModelTriangle modelTriangle: model.faces)
+  int height = std::ceil( abs(triangle.vertices[0].y - triangle.vertices[1].y) + 1);
+
+  std::vector<CanvasPoint> from = utilities::interpolateCanvasPoint(triangle.vertices[0], triangle.vertices[1], height);
+  std::vector<CanvasPoint> to   = utilities::interpolateCanvasPoint(triangle.vertices[0], triangle.vertices[2], height);
+
+  for(int row=0; row < height; row++) 
   {
-      // std::cout << modelTriangle << std::endl;
-      CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTriangle, camera);
+    bool reverseOrder = from[row].x > to[row].x;
+    CanvasPoint fromPoint = reverseOrder ? to[row] : from[row];
+    CanvasPoint toPoint = reverseOrder ? from[row] : to[row];
+    
+    int y = fromPoint.y + row;
+    int width = std::ceil(toPoint.x - fromPoint.x  + 1);
+    std::vector<CanvasPoint> line = utilities::interpolateCanvasPoint(fromPoint, toPoint, width);
 
-      // std::cout << canvasTriangle << std::endl;
+    for(int col = 0; col < width; col++)
+    {
+      CanvasPoint p = line[col];
+      std::cout << y << " " << p.y << std::endl;
 
-      drawTriangleOutline(canvasTriangle, canvasTriangle.colour, window);
-      // drawTriangleFilled(canvasTriangle, canvasTriangle.colour, window);
+      // int x = std::round(p.x);
+      int x = fromPoint.x + col;
+      int idx = (y * WIDTH) + x;
+
+      // if(x != x1) {
+      //   std::cout << "X: " << p.x << ", X1: " << fromPoint.x + xOffset << std::endl;
+      //   std::cout << "X: " << x << ", X1: " << x1 << std::endl;
+      // }
+
+
+      // std::cout << idx << std::endl;
+
+      // window.setPixelColour(x1, y, c.getPackedInt());
+
+      if(idx >= 0 && idx < WIDTH*HEIGHT && depthBuffer[idx] >= p.depth) 
+      {
+        window.setPixelColour(x, y, c.getPackedInt());
+        depthBuffer[idx] = p.depth;
+      } else if(idx >= 0 && idx < WIDTH*HEIGHT && depthBuffer[idx] < p.depth)
+      {
+        std::cout << "DB: " << depthBuffer[idx] << ", PD: " << p.depth << std::endl;
+      }
+    }
   }
+}
+
+void loadModel(OBJFile model, Camera camera, DrawingWindow window, bool showWireframe)
+{
+  float* depthBuffer = new float[WIDTH*HEIGHT];
+  std::fill_n(depthBuffer, WIDTH*HEIGHT, std::numeric_limits<float>::infinity());
+
+  for(int i=9 ; i <= 10; i++) {
+      ModelTriangle modelTrangle = model.faces[i];
+      CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTrangle, camera);
+
+      std::cout << "CanvasTriangle" << canvasTriangle << std::endl;
+
+      if(showWireframe)
+        drawTriangleOutline(canvasTriangle, canvasTriangle.colour, window);
+      else
+        drawTriangleFilled(canvasTriangle, canvasTriangle.colour, window, depthBuffer);
+  }
+
+  // for(ModelTriangle modelTriangle: model.faces)
+  // {
+  //     // std::cout << modelTriangle << std::endl;
+  //     CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTriangle, camera);
+
+  //     // std::cout << canvasTriangle << std::endl;
+
+  //     if(showWireframe)
+  //       drawTriangleOutline(canvasTriangle, canvasTriangle.colour, window);
+  //     else
+  //       drawTriangleFilled(canvasTriangle, canvasTriangle.colour, window, depthBuffer);
+  // }
 
 }

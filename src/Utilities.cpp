@@ -58,24 +58,35 @@ namespace utilities
 
         if(steps <= 0) return points;
 
+        // std::cout << "###################" << std::endl;
+
         float xDiff = to.x - from.x;
         float yDiff = to.y - from.y;
+        float dDiff = to.depth - from.depth;
+
         float xTexDiff = to.texturePoint.x - from.texturePoint.x;
         float yTexDiff = to.texturePoint.y - from.texturePoint.y;
 
         float xStepSize = steps == 1 ? xDiff : xDiff / (steps - 1);
         float yStepSize = steps == 1 ? yDiff : yDiff / (steps - 1);
+        float dStepSize = steps == 1 ? dDiff : dDiff / (steps - 1);
+
         float xTexStepSize = steps == 1 ? xTexDiff : xTexDiff / (steps - 1);
         float yTexStepSize = steps == 1 ? yTexDiff : yTexDiff / (steps - 1);
 
-        for(float step = 0; step <= steps; step += 1) {
+        // std::cout << "FROM: " << from.depth << ", TO: " << to.depth << ", STEPS: " << steps << std::endl;
+
+        for(float step = 0; step < steps; step += 1) {
             float curX = from.x + step * xStepSize;
             float curY = from.y + step * yStepSize;
+            float curD = from.depth + step * dStepSize;
+
+            // std::cout << "DEPTH: " << curD << std::endl;
 
             float curTexX = from.texturePoint.x + step * xTexStepSize;
             float curTexY = from.texturePoint.y + step * yTexStepSize;
 
-            CanvasPoint cur = CanvasPoint(curX, curY);
+            CanvasPoint cur = CanvasPoint(curX, curY, curD);
             cur.texturePoint = TexturePoint(curTexX, curTexY);
 
             points.push_back(cur);
@@ -89,11 +100,15 @@ namespace utilities
     {
         float heightDiff = triangle.vertices[2].y - triangle.vertices[0].y;
         float widthDiff = triangle.vertices[2].x - triangle.vertices[0].x;
+        float depthDiff = triangle.vertices[2].depth - triangle.vertices[0].depth;
+
         float midPointHeightDiff = triangle.vertices[1].y - triangle.vertices[0].y;
         float midPointWidthDiff = (midPointHeightDiff / heightDiff) * widthDiff;
+        float midPointDepthDiff = (midPointHeightDiff / heightDiff) * depthDiff;
 
         float midPointX = triangle.vertices[0].x + midPointWidthDiff;
         float midPointY = triangle.vertices[0].y + midPointHeightDiff;
+        float midPointDepth = triangle.vertices[0].depth + midPointDepthDiff;
 
         TexturePoint a = triangle.vertices[0].texturePoint;
         TexturePoint b = triangle.vertices[2].texturePoint;
@@ -106,7 +121,7 @@ namespace utilities
         float texMidPointX = a.x + (texWidth / widthDiff) * midPointWidthDiff;
         float texMidPointY = a.y + (texHeight / heightDiff) * midPointHeightDiff;
 
-        CanvasPoint midPoint = CanvasPoint(midPointX, midPointY);
+        CanvasPoint midPoint = CanvasPoint(midPointX, midPointY, midPointDepth);
         midPoint.texturePoint = TexturePoint(texMidPointX, texMidPointY);
 
         return midPoint;
@@ -127,12 +142,15 @@ namespace utilities
 
 CanvasPoint convertToCanvasPoint(glm::vec3 vector, Camera camera)
 {
+    // Model space -> Camera space
     float X = vector[0] - camera.X;
     float Y = vector[1] - camera.Y;
     float Z = vector[2] - camera.Z;
 
-    float canvasX = ( camera.f * -X ) / ( Z ) + WIDTH/2;
-    float canvasY = ( camera.f * Y ) / ( Z ) + HEIGHT/2;
+    // Camera space -> Canvas Space
+    float canvasX = ( camera.f *  X ) / ( -Z ) + WIDTH/2;
+    float canvasY = ( camera.f * -Y ) / ( -Z ) + HEIGHT/2;
+    float canvasD = 1/Z;
 
-    return CanvasPoint(canvasX, canvasY);
+    return CanvasPoint(canvasX, canvasY, canvasD);
 }

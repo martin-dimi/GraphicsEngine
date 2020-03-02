@@ -25,8 +25,10 @@ const int WIDTH = 600;
 const int HEIGHT = 400;
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-Camera camera = Camera(0, 0, 100, HEIGHT/2);
-OBJFile model = OBJFile("cornell-box/cornell-box.mtl", "cornell-box/cornell-box.obj", 30);
+Camera camera = Camera(0, 0, 50, HEIGHT/2);
+OBJFile model = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 10);
+
+bool showWireframe = false;
 
 int main(int argc, char* argv[])
 {
@@ -54,9 +56,9 @@ void draw()
   // drawLine( CanvasPoint(15, 30), CanvasPoint(280, 212), Colour(255, 0, 0), window);
 
 
-  loadModel(model, camera, window);
-  drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
-  drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
+  loadModel(model, camera, window, showWireframe);
+  // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
+  // drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
 }
 
 void update()
@@ -80,6 +82,7 @@ void handleEvent(SDL_Event event)
     else if(event.key.keysym.sym == SDLK_i) displayImage();
     else if(event.key.keysym.sym == SDLK_t) paintTexturedTriangle();
     else if(event.key.keysym.sym == SDLK_m) displayModel();
+    else if(event.key.keysym.sym == SDLK_w) showWireframe = !showWireframe;
 
   }
   else if(event.type == SDL_MOUSEBUTTONDOWN) cout << "MOUSE CLICKED" << endl;
@@ -136,7 +139,7 @@ void displayImage()
 
 void displayModel()
 {
-  loadModel(model, camera, window);
+  loadModel(model, camera, window, showWireframe);
 
 }
 

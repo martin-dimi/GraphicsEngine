@@ -1,8 +1,12 @@
-PROJECT_NAME = RedNoise
+ROOT = $(realpath .)
+
+PROJECT_NAME = Engine
+BINARIES_PATH = $(ROOT)/binary
+SRC_PATH = $(ROOT)/src
 
 # Define the names of key files
-SOURCE_FILE = $(PROJECT_NAME).cpp DrawUtils.cpp Utilities.cpp OBJFile.cpp
-OBJECT_FILE = $(PROJECT_NAME).o DrawUtils.o Utilities.o OBJFile.o
+SOURCE_FILE = $(SRC_PATH)/*.cpp
+OBJECT_FILE = $(BINARIES_PATH)/*.o
 EXECUTABLE = $(PROJECT_NAME)
 WINDOW_SOURCE = libs/sdw/DrawingWindow.cpp
 WINDOW_OBJECT = libs/sdw/DrawingWindow.o
@@ -29,6 +33,7 @@ default: diagnostic
 # Rule to help find errors (when you get a segmentation fault)
 diagnostic: window
 	$(COMPILER) $(COMPILER_OPTIONS) $(FUSSY_OPTIONS) $(SANITIZER_OPTIONS) $(SOURCE_FILE) $(SDL_COMPILER_FLAGS) $(SDW_COMPILER_FLAGS) $(GLM_COMPILER_FLAGS)
+	mv *.o binary/
 	$(COMPILER) $(LINKER_OPTIONS) $(FUSSY_OPTIONS) $(SANITIZER_OPTIONS) -o $(EXECUTABLE) $(OBJECT_FILE) $(SDL_LINKER_FLAGS) $(SDW_LINKER_FLAGS)
 	./$(EXECUTABLE)
 
@@ -36,7 +41,7 @@ diagnostic: window
 production: window
 	$(COMPILER) $(COMPILER_OPTIONS) -o $(OBJECT_FILE) $(SOURCE_FILE) $(SDL_COMPILER_FLAGS) $(SDW_COMPILER_FLAGS) $(GLM_COMPILER_FLAGS)
 	$(COMPILER) $(LINKER_OPTIONS) -o $(EXECUTABLE) $(OBJECT_FILE) $(SDL_LINKER_FLAGS) $(SDW_LINKER_FLAGS)
-	./$(EXECUTABLE)
+	.$(EXECUTABLE)
 
 # Rule to compile and link for use with a debugger
 debug: window

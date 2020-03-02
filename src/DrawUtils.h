@@ -19,7 +19,8 @@ void drawColorGradient(DrawingWindow window);
 void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow window);
 void drawTriangleOutline(CanvasTriangle triangle, Colour c, DrawingWindow window);
 void drawTriangleFilled(CanvasTriangle triangle, Colour c, DrawingWindow window);
+void drawTriangleFilled(CanvasTriangle triangle, Colour c, DrawingWindow window, float* depthBuffer);
 
-void loadModel(OBJFile model, Camera camera, DrawingWindow window);
+void loadModel(OBJFile model, Camera camera, DrawingWindow window, bool showWireframe);
 void loadImage(PPMImage image, DrawingWindow window);
 void drawTriangleImageFilled(CanvasTriangle triangle, PPMImage image, DrawingWindow window);
