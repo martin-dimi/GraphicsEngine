@@ -13,5 +13,4 @@ public:
         this->Z = Z;
         this->f = f;
     }
-
 };

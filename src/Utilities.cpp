@@ -1,6 +1,6 @@
 #include "Utilities.h"
 
-CanvasPoint convertToCanvasPoint(glm::vec3 vector, Camera camera);
+CanvasPoint convertToCanvasPoint(glm::vec3 vector, Camera camera, int WIDTH, int HEIGHT);
 
 namespace utilities
 {
@@ -18,7 +18,7 @@ namespace utilities
         return numbers; 
     }
 
-    std::vector<CanvasPoint> interpolate2d(CanvasPoint from, CanvasPoint to) 
+    std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to) 
     {
         std::vector<CanvasPoint> numbers;
         
@@ -40,10 +40,10 @@ namespace utilities
         return numbers;
     }
 
-    std::vector<vec3> interpolate3d(glm::vec3 from, glm::vec3 to, int steps) {
+    std::vector<vec3> interpolate(glm::vec3 from, glm::vec3 to, int steps) {
         std::vector<vec3> numbers;
         vec3 diff = to - from;
-        vec3 increment = diff / float(steps - 1);
+        vec3 increment = steps == 1 ? diff : diff / float(steps - 1);
 
         for(float step = 0; step <= steps; step += 1) {
             vec3 cur = from + step * increment;
@@ -53,7 +53,7 @@ namespace utilities
         return numbers;
     }
 
-    std::vector<CanvasPoint> interpolateCanvasPoint(CanvasPoint from, CanvasPoint to, int steps) {
+    std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to, int steps) {
         std::vector<CanvasPoint> points;
 
         if(steps <= 0) return points;
@@ -89,7 +89,6 @@ namespace utilities
         return points;
     }
 
-
     CanvasPoint getTriangleMidPoint(CanvasTriangle triangle)
     {
         float heightDiff = triangle.vertices[2].y - triangle.vertices[0].y;
@@ -119,20 +118,20 @@ namespace utilities
         return midPoint;
     }
 
-    CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera)
+    CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera, int WIDTH, int HEIGHT)
     {
         CanvasTriangle triangle = CanvasTriangle();
 
-        CanvasPoint a = convertToCanvasPoint(model.vertices[0], camera);
-        CanvasPoint b = convertToCanvasPoint(model.vertices[1], camera);
-        CanvasPoint c = convertToCanvasPoint(model.vertices[2], camera);
+        CanvasPoint a = convertToCanvasPoint(model.vertices[0], camera, WIDTH, HEIGHT);
+        CanvasPoint b = convertToCanvasPoint(model.vertices[1], camera, WIDTH, HEIGHT);
+        CanvasPoint c = convertToCanvasPoint(model.vertices[2], camera, WIDTH, HEIGHT);
 
         return CanvasTriangle(a, b, c, model.colour);
     }
     
 }
 
-CanvasPoint convertToCanvasPoint(glm::vec3 vector, Camera camera)
+CanvasPoint convertToCanvasPoint(glm::vec3 vector, Camera camera, int WIDTH, int HEIGHT)
 {
     // Model space -> Camera space
     float X = vector[0] - camera.X;

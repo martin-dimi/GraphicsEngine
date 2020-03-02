@@ -28,8 +28,6 @@ DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 Camera camera = Camera(0, 0, 50, HEIGHT/2);
 OBJFile model = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 10);
 
-bool showWireframe = false;
-
 int main(int argc, char* argv[])
 {
   SDL_Event event;
@@ -47,16 +45,10 @@ int main(int argc, char* argv[])
 
 void draw()
 {
-  window.clearPixels();
-
-  // drawRedError(window);
-  // drawGrayGradient(window);
-  // drawColorGradient(window);
-
-  // drawLine( CanvasPoint(15, 30), CanvasPoint(280, 212), Colour(255, 0, 0), window);
+  // window.clearPixels();
 
 
-  loadModel(model, camera,   window, showWireframe);
+  // loadModel(model, camera,   window, showWireframe);
   // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
   // drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
 }
@@ -82,7 +74,6 @@ void handleEvent(SDL_Event event)
     else if(event.key.keysym.sym == SDLK_i) displayImage();
     else if(event.key.keysym.sym == SDLK_t) paintTexturedTriangle();
     else if(event.key.keysym.sym == SDLK_m) displayModel();
-    else if(event.key.keysym.sym == SDLK_w) showWireframe = !showWireframe;
 
   }
   else if(event.type == SDL_MOUSEBUTTONDOWN) cout << "MOUSE CLICKED" << endl;
@@ -99,7 +90,7 @@ void randomTrianlgeOutline() {
 
   Colour c = Colour(rand()%255, rand()%255, rand()%255);
 
-  drawTriangleOutline(CanvasTriangle(p1, p2, p3), c, window);
+  drawTriangle(CanvasTriangle(p1, p2, p3, c), false, window);
 }
 
 void randomTrianlgeFilled() {
@@ -113,12 +104,12 @@ void randomTrianlgeFilled() {
 
   Colour c = Colour(rand()%255, rand()%255, rand()%255);
 
-  drawTriangleFilled(CanvasTriangle(p1, p2, p3), c, window);
+  drawTriangle(CanvasTriangle(p1, p2, p3, c), true, window);
 }
 void paintTexturedTriangle() 
 {
 
-  PPMImage image = PPMImage("texture.ppm");
+  PPMImage image = PPMImage("assets/texture.ppm");
 
   CanvasPoint p1 = CanvasPoint(160, 10);
   CanvasPoint p2 = CanvasPoint(300, 230);
@@ -128,18 +119,17 @@ void paintTexturedTriangle()
   p2.texturePoint = TexturePoint(395, 380);
   p3.texturePoint = TexturePoint(65, 330);
 
-  drawTriangleImageFilled(CanvasTriangle(p1, p2, p3), image, window);
+  drawTriangleTexture(CanvasTriangle(p1, p2, p3), image, window);
 }
 
 void displayImage() 
 {
-  PPMImage image = PPMImage("texture.ppm");
+  PPMImage image = PPMImage("assets/texture.ppm");
   loadImage(image, window);
 }
 
 void displayModel()
 {
-  loadModel(model, camera, window, showWireframe);
-
+  loadModel(model, camera, window, false);
 }
 
