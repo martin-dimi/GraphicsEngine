@@ -82,7 +82,7 @@ void OBJFile::readVertex(string* words)
 {
     float x = stof(words[1]) * scale;
     float y = stof(words[2]) * scale;
-    double z = stod(words[3]) * scale;
+    float z = stof(words[3]) * scale;
 
     glm::vec3 v = glm::vec3(x, y, z);
     this->vertecies.push_back(v);
