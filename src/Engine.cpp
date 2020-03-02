@@ -25,8 +25,10 @@ const int WIDTH = 600;
 const int HEIGHT = 400;
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-Camera camera = Camera(0, 0, 50, HEIGHT/2);
+Camera camera = Camera(0, 0, 150, HEIGHT/2);
 OBJFile model = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 10);
+
+bool isSpinning = false;
 
 int main(int argc, char* argv[])
 {
@@ -45,10 +47,10 @@ int main(int argc, char* argv[])
 
 void draw()
 {
-  // window.clearPixels();
+  window.clearPixels();
+  loadModel(model, camera,   window, false);
 
 
-  // loadModel(model, camera,   window, showWireframe);
   // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
   // drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
 }
@@ -56,24 +58,34 @@ void draw()
 void update()
 {
   // Function for performing animation (shifting artifacts or moving the camera)
+  if(!isSpinning) return;
+
+  glm::vec3 right = camera.orientation[0];
+  camera.position.x += right.x;
+  camera.position.z += right.z;
+  camera.lookAt(glm::vec3(0, 0, 0));
 }
 
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_LEFT) camera.X -= 5;
-    else if(event.key.keysym.sym == SDLK_RIGHT) camera.X += 5;
-    else if(event.key.keysym.sym == SDLK_UP) camera.Y += 5;
-    else if(event.key.keysym.sym == SDLK_DOWN) camera.Y -= 5;
-    else if(event.key.keysym.sym == SDLK_l) camera.Z += 5;
-    else if(event.key.keysym.sym == SDLK_k) camera.Z -= 5;
+    if(event.key.keysym.sym == SDLK_LEFT) camera.position.x -= 5;
+    else if(event.key.keysym.sym == SDLK_RIGHT) camera.position.x += 5;
+    else if(event.key.keysym.sym == SDLK_UP) camera.position.y += 5;
+    else if(event.key.keysym.sym == SDLK_DOWN) camera.position.y -= 5;
+    else if(event.key.keysym.sym == SDLK_l) camera.position.z += 5;
+    else if(event.key.keysym.sym == SDLK_k) camera.position.z -= 5;
+    else if(event.key.keysym.sym == SDLK_a) camera.tilt(3);
+    else if(event.key.keysym.sym == SDLK_s) camera.tilt(-3);
 
     else if(event.key.keysym.sym == SDLK_c) clear();
     else if(event.key.keysym.sym == SDLK_u) randomTrianlgeOutline();
-    else if(event.key.keysym.sym == SDLK_f) randomTrianlgeFilled();
+    else if(event.key.keysym.sym == SDLK_f) camera.lookAt(glm::vec3(0, 0, 0));
     else if(event.key.keysym.sym == SDLK_i) displayImage();
     else if(event.key.keysym.sym == SDLK_t) paintTexturedTriangle();
     else if(event.key.keysym.sym == SDLK_m) displayModel();
+
+    else if(event.key.keysym.sym == SDLK_SPACE) isSpinning = !isSpinning;
 
   }
   else if(event.type == SDL_MOUSEBUTTONDOWN) cout << "MOUSE CLICKED" << endl;
