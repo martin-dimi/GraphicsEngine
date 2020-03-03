@@ -18,7 +18,7 @@ class OBJFile
     private:
         string pathMtl;
         string pathObj;
-        int scale;
+        float scale;
         unordered_map<string, Colour> pallete;
         vector<glm::vec3> vertecies;
 
@@ -31,7 +31,7 @@ class OBJFile
 
     public:
         OBJFile(string pathMtl, string pathObj);
-        OBJFile(string pathMtl, string pathObj, int scale);
+        OBJFile(string pathMtl, string pathObj, float scale);
         vector<ModelTriangle> faces;
 
 };

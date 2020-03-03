@@ -1,9 +1,9 @@
 #include "OBJFile.h"
 #include "Utils.h"
 
-OBJFile::OBJFile(string pathMtl, string pathObj) :OBJFile::OBJFile(pathMtl, pathObj, 1) {}
+OBJFile::OBJFile(string pathMtl, string pathObj) :OBJFile::OBJFile(pathMtl, pathObj, 1.0f) {}
 
-OBJFile::OBJFile(string pathMtl, string pathObj, int scale)
+OBJFile::OBJFile(string pathMtl, string pathObj, float scale)
 {
     this->pathMtl = pathMtl;
     this->pathObj = pathObj;

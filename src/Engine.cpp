@@ -25,8 +25,8 @@ const int WIDTH = 600;
 const int HEIGHT = 400;
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-Camera camera = Camera(0, 0, 150, HEIGHT/2);
-OBJFile model = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 10);
+Camera camera = Camera(0, 0, 4, HEIGHT/2);
+OBJFile model = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 0.3);
 
 bool isSpinning = false;
 
@@ -69,12 +69,12 @@ void update()
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_LEFT) camera.position.x -= 5;
-    else if(event.key.keysym.sym == SDLK_RIGHT) camera.position.x += 5;
-    else if(event.key.keysym.sym == SDLK_UP) camera.position.y += 5;
-    else if(event.key.keysym.sym == SDLK_DOWN) camera.position.y -= 5;
-    else if(event.key.keysym.sym == SDLK_l) camera.position.z += 5;
-    else if(event.key.keysym.sym == SDLK_k) camera.position.z -= 5;
+    if(event.key.keysym.sym == SDLK_LEFT) camera.position.x -= 0.5f;
+    else if(event.key.keysym.sym == SDLK_RIGHT) camera.position.x += 0.5f;
+    else if(event.key.keysym.sym == SDLK_UP) camera.position.y += 0.5f;
+    else if(event.key.keysym.sym == SDLK_DOWN) camera.position.y -= 0.5f;
+    else if(event.key.keysym.sym == SDLK_l) camera.position.z += 0.5f;
+    else if(event.key.keysym.sym == SDLK_k) camera.position.z -= 0.5f;
     else if(event.key.keysym.sym == SDLK_a) camera.tilt(3);
     else if(event.key.keysym.sym == SDLK_s) camera.tilt(-3);
 
@@ -86,8 +86,8 @@ void handleEvent(SDL_Event event)
     else if(event.key.keysym.sym == SDLK_m) displayModel();
 
     else if(event.key.keysym.sym == SDLK_SPACE) isSpinning = !isSpinning;
-
   }
+
   else if(event.type == SDL_MOUSEBUTTONDOWN) cout << "MOUSE CLICKED" << endl;
 }
 
@@ -109,10 +109,6 @@ void randomTrianlgeFilled() {
   CanvasPoint p1 = CanvasPoint(rand()%WIDTH, rand()%HEIGHT);
   CanvasPoint p2 = CanvasPoint(rand()%WIDTH, rand()%HEIGHT);
   CanvasPoint p3 = CanvasPoint(rand()%WIDTH, rand()%HEIGHT);
-
-  // CanvasPoint p1 = CanvasPoint(125, 218);
-  // CanvasPoint p2 = CanvasPoint(191, 152);
-  // CanvasPoint p3 = CanvasPoint(124, 152);
 
   Colour c = Colour(rand()%255, rand()%255, rand()%255);
 
