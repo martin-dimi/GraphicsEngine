@@ -25,8 +25,8 @@ const int WIDTH = 600;
 const int HEIGHT = 400;
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-Camera camera = Camera(0, 0, 4, HEIGHT/2);
-OBJFile model = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 0.3);
+Camera camera = Camera(0.0f, 0.5f, 2.5f, HEIGHT/2.5f);
+OBJFile model = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 0.3f);
 
 bool isSpinning = false;
 
@@ -48,11 +48,10 @@ int main(int argc, char* argv[])
 void draw()
 {
   window.clearPixels();
-  loadModel(model, camera,   window, false);
+  loadModel(model, camera, window, false);
 
-
-  // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
-  // drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
+  drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
+  drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
 }
 
 void update()
@@ -60,27 +59,27 @@ void update()
   // Function for performing animation (shifting artifacts or moving the camera)
   if(!isSpinning) return;
 
-  glm::vec3 right = camera.orientation[0];
-  camera.position.x += right.x;
-  camera.position.z += right.z;
-  camera.lookAt(glm::vec3(0, 0, 0));
+  // std::cout << "X: " << camera.position.x << ", Y: " << camera.position.y << ", Z: " << camera.position.z << std::endl;
+  
+  camera.lookAt(glm::vec3(0, 0.5, -1));
+  camera.translate(glm::vec3(1.0f, 0.0f, 0.0f), 0.1f);
 }
 
 void handleEvent(SDL_Event event)
 {
   if(event.type == SDL_KEYDOWN) {
-    if(event.key.keysym.sym == SDLK_LEFT) camera.position.x -= 0.5f;
-    else if(event.key.keysym.sym == SDLK_RIGHT) camera.position.x += 0.5f;
-    else if(event.key.keysym.sym == SDLK_UP) camera.position.y += 0.5f;
-    else if(event.key.keysym.sym == SDLK_DOWN) camera.position.y -= 0.5f;
-    else if(event.key.keysym.sym == SDLK_l) camera.position.z += 0.5f;
-    else if(event.key.keysym.sym == SDLK_k) camera.position.z -= 0.5f;
+    if(event.key.keysym.sym == SDLK_LEFT) camera.translate(glm::vec3(-1, 0, 0), 0.1f);
+    else if(event.key.keysym.sym == SDLK_RIGHT) camera.translate(glm::vec3(1, 0, 0), 0.1f);
+    else if(event.key.keysym.sym == SDLK_UP) camera.translate(glm::vec3(0, 1, 0), 0.1f);
+    else if(event.key.keysym.sym == SDLK_DOWN) camera.translate(glm::vec3(0, -1, 0), 0.1f);
+    else if(event.key.keysym.sym == SDLK_l) camera.translate(glm::vec3(0, 0, 1), 0.1f);
+    else if(event.key.keysym.sym == SDLK_k) camera.translate(glm::vec3(0, 0, -1), 0.1f);
     else if(event.key.keysym.sym == SDLK_a) camera.tilt(3);
     else if(event.key.keysym.sym == SDLK_s) camera.tilt(-3);
 
     else if(event.key.keysym.sym == SDLK_c) clear();
     else if(event.key.keysym.sym == SDLK_u) randomTrianlgeOutline();
-    else if(event.key.keysym.sym == SDLK_f) camera.lookAt(glm::vec3(0, 0, 0));
+    else if(event.key.keysym.sym == SDLK_f) camera.lookAt(glm::vec3(0, 0.5, -1));
     else if(event.key.keysym.sym == SDLK_i) displayImage();
     else if(event.key.keysym.sym == SDLK_t) paintTexturedTriangle();
     else if(event.key.keysym.sym == SDLK_m) displayModel();

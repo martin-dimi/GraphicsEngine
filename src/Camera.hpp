@@ -7,42 +7,40 @@ using namespace glm;
 class Camera {
 
 public:
-    int X, Y, Z;
-    int f;
+    float f;
     
-    vec3 position;
-
     // 0 - right, 1 - up, 2 - forward
     mat3 orientation;
+    vec3 position;
 
-    Camera(int f): Camera(0, 0, 0, f) { 
+    Camera(float f): Camera(0.0f, 0.0f, 0.0f, f) 
+    { 
         // Default constructor
     }
 
-    Camera(int X, int Y, int Z, int f)
+    Camera(float X, float Y, float Z, float f)
     {
-        this->X = X;
-        this->Y = Y;
-        this->Z = Z;
-        this->f = f;
-
         position = vec3(X, Y, Z);
-        orientation = mat3(1.0);
-
-        for(int i = 0; i < 3; i++) {
-            std::cout << "X: " << orientation[i].x << ", Y: " << orientation[i].y << ", Z: " << orientation[i].z << std::endl;
-        }
+        orientation = mat3(1.0f);
+        this->f = f;
     }
 
     void lookAt(vec3 point)
     {
-        vec3 forward = position - point;
-        vec3 right   = cross(vec3(0, 1, 0), forward);
-        vec3 up      = cross(forward, right);
+        vec3 forward = normalize(position - point);
+        vec3 right   = normalize(cross(vec3(0.0f, 1.0f, 0.0f), forward));
+        vec3 up      = normalize(cross(forward, right));
 
-        orientation[0] = normalize(right);
-        orientation[1] = normalize(up);
-        orientation[2] = normalize(forward);
+        orientation[0] = right;
+        orientation[1] = up;
+        orientation[2] = forward;
+    }
+
+    void translate(vec3 direction, float distance)
+    {
+        vec3 dir = normalize(orientation * direction);
+        std::cout << "X: " << dir.x  << ", Y: " << dir.y  << ", Z: " << dir.z << std::endl;
+        position = dir * distance + position;
     }
 
     void tilt(float angle) 

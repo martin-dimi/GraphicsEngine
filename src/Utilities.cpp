@@ -109,8 +109,8 @@ namespace utilities
         float texHeight = b.y - a.y;
         float texWidth  = b.x - a.x;
 
-        float texMidPointX = a.x + (texWidth / widthDiff) * midPointWidthDiff;
-        float texMidPointY = a.y + (texHeight / heightDiff) * midPointHeightDiff;
+        float texMidPointX = a.x + (texWidth / (widthDiff == 0 ? 1 : widthDiff)) * midPointWidthDiff;
+        float texMidPointY = a.y + (texHeight / (heightDiff == 0 ? 1 : heightDiff)) * midPointHeightDiff;
 
         CanvasPoint midPoint = CanvasPoint(midPointX, midPointY, midPointDepth);
         midPoint.texturePoint = TexturePoint(texMidPointX, texMidPointY);
@@ -127,8 +127,7 @@ namespace utilities
         CanvasPoint c = convertToCanvasPoint(model.vertices[2], camera, WIDTH, HEIGHT);
 
         return CanvasTriangle(a, b, c, model.colour);
-    }
-    
+    } 
 }
 
 CanvasPoint convertToCanvasPoint(glm::vec3 point, Camera camera, int WIDTH, int HEIGHT)
@@ -137,9 +136,9 @@ CanvasPoint convertToCanvasPoint(glm::vec3 point, Camera camera, int WIDTH, int 
     glm::vec3 updated = (point - camera.position) * camera.orientation;
 
     // Camera space -> Canvas Space
-    float canvasX = ( camera.f *  updated.x ) / ( -updated.z ) + WIDTH/2;
-    float canvasY = ( camera.f * -updated.y ) / ( -updated.z ) + HEIGHT/2;
-    float canvasD = 1/updated.z;
+    float canvasX = ( camera.f *  updated.x ) / ( -updated.z ) + WIDTH/2.0f;
+    float canvasY = ( camera.f * -updated.y ) / ( -updated.z ) + HEIGHT/2.0f;
+    float canvasD = 1.0f / updated.z;
 
     return CanvasPoint(canvasX, canvasY, canvasD);
 }
