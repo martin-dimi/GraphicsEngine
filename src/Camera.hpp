@@ -39,8 +39,17 @@ public:
     void translate(vec3 direction, float distance)
     {
         vec3 dir = normalize(orientation * direction);
-        std::cout << "X: " << dir.x  << ", Y: " << dir.y  << ", Z: " << dir.z << std::endl;
         position = dir * distance + position;
+    }
+
+    void rotate(vec3 pivot, float angle) 
+    {
+        angle = radians(angle);
+        mat3 rotationMatrix(vec3(cos(angle), 0.0, sin(angle)),
+                            vec3(0.0,        1.0,        0.0),
+                            vec3(-sin(angle), 0.0, cos(angle)));
+
+        position = ((position - pivot) * rotationMatrix) + pivot;
     }
 
     void tilt(float angle) 

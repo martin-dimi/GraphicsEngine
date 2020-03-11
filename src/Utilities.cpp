@@ -136,8 +136,8 @@ CanvasPoint convertToCanvasPoint(glm::vec3 point, Camera camera, int WIDTH, int 
     glm::vec3 updated = (point - camera.position) * camera.orientation;
 
     // Camera space -> Canvas Space
-    float canvasX = ( camera.f *  updated.x ) / ( -updated.z ) + WIDTH/2.0f;
-    float canvasY = ( camera.f * -updated.y ) / ( -updated.z ) + HEIGHT/2.0f;
+    float canvasX = 100.0f * ( camera.f *  updated.x ) / ( -updated.z ) + WIDTH/2.0f;
+    float canvasY = 100.0f * ( camera.f * -updated.y ) / ( -updated.z ) + HEIGHT/2.0f;
     float canvasD = 1.0f / updated.z;
 
     return CanvasPoint(canvasX, canvasY, canvasD);

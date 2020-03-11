@@ -25,7 +25,7 @@ const int WIDTH = 600;
 const int HEIGHT = 400;
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-Camera camera = Camera(0.0f, 0.5f, 2.5f, HEIGHT/2.5f);
+Camera camera = Camera(0.0f, 0.5f, 2.0f, 3.0f);
 OBJFile model = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 0.3f);
 
 bool isSpinning = false;
@@ -50,19 +50,16 @@ void draw()
   window.clearPixels();
   loadModel(model, camera, window, false);
 
-  drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
-  drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
+  // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
+  // drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
 }
 
 void update()
 {
   // Function for performing animation (shifting artifacts or moving the camera)
   if(!isSpinning) return;
-
-  // std::cout << "X: " << camera.position.x << ", Y: " << camera.position.y << ", Z: " << camera.position.z << std::endl;
-  
-  camera.lookAt(glm::vec3(0, 0.5, -1));
-  camera.translate(glm::vec3(1.0f, 0.0f, 0.0f), 0.1f);
+    camera.translate(glm::vec3(1.0f, 0.0f, 0.0f), 0.3f);
+    camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 void handleEvent(SDL_Event event)
@@ -79,7 +76,7 @@ void handleEvent(SDL_Event event)
 
     else if(event.key.keysym.sym == SDLK_c) clear();
     else if(event.key.keysym.sym == SDLK_u) randomTrianlgeOutline();
-    else if(event.key.keysym.sym == SDLK_f) camera.lookAt(glm::vec3(0, 0.5, -1));
+    else if(event.key.keysym.sym == SDLK_f) camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
     else if(event.key.keysym.sym == SDLK_i) displayImage();
     else if(event.key.keysym.sym == SDLK_t) paintTexturedTriangle();
     else if(event.key.keysym.sym == SDLK_m) displayModel();
