@@ -1,6 +1,7 @@
 #pragma once
 #include "SDL2/SDL.h"
 #include <iostream>
+#include "Colour.h"
 
 class DrawingWindow
 {
@@ -14,6 +15,10 @@ private:
 public:
   int height;
   int width;
+  float halfHeight;
+  float halfWidth;
+  float scale;
+  Colour backgroundColour;
 
   // Constructor method
   DrawingWindow();

@@ -13,7 +13,15 @@ DrawingWindow::DrawingWindow(int w, int h, bool fullscreen)
   }
 
   width = w;
+  halfWidth = w * 0.5f;
+
   height = h;
+  halfHeight = height * 0.5f;
+
+  scale = std::min(width, height);
+
+  backgroundColour = Colour(0,0,0);
+  
   pixelBuffer = new uint32_t[width*height];
   clearPixels();
 

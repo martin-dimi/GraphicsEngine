@@ -21,10 +21,13 @@ class OBJFile
         float scale;
         unordered_map<string, Colour> pallete;
         vector<glm::vec3> vertecies;
+        glm::vec3 max;
+        glm::vec3 min;
 
         void readPallet();
         void readTriangles();
         int normaliseChannel(float c);
+        void normaliseVertices();
         void readVertex(string* words);
         Colour readColour(string* words);
         void readFace(string* words, Colour colour);

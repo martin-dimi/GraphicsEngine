@@ -8,6 +8,8 @@ OBJFile::OBJFile(string pathMtl, string pathObj, float scale)
     this->pathMtl = pathMtl;
     this->pathObj = pathObj;
     this->scale = scale;
+    this->max = glm::vec3(-1000.0f, -1000.0f, -1000.0f);
+    this->min = glm::vec3(1000.0f, 1000.0f, 1000.0f);
 
     readPallet();   
     readTriangles();
@@ -62,6 +64,8 @@ void OBJFile::readTriangles()
             if(words[0] == "v") readVertex(words);
         }
 
+        normaliseVertices();
+
         // Read all the faces
         geometryFile.clear();
         geometryFile.seekg(0);
@@ -83,6 +87,18 @@ void OBJFile::readVertex(string* words)
     float x = stof(words[1]) * scale;
     float y = stof(words[2]) * scale;
     float z = stof(words[3]) * scale;
+
+    // float x = stof(words[1]);
+    // float y = stof(words[2]);
+    // float z = stof(words[3]);
+
+    if(x > this->max.x) this->max.x = x;
+    if(y > this->max.y) this->max.y = y;
+    if(z > this->max.z) this->max.z = z;
+
+    if(x < this->min.x) this->min.x = x;
+    if(y < this->min.y) this->min.y = y;
+    if(z < this->min.z) this->min.z = z;
 
     glm::vec3 v = glm::vec3(x, y, z);
     this->vertecies.push_back(v);
@@ -122,4 +138,24 @@ void OBJFile::readFace(string* words, Colour colour)
 int OBJFile::normaliseChannel(float c)
 {
     return c * 255;
+}
+
+void OBJFile::normaliseVertices()
+{
+
+    for(int i=0; i < this->vertecies.size(); i++)
+    {
+        glm::vec3 v = this->vertecies[i];
+
+        v.x = 2 * (v.x - min.x) / (max.x - min.x) - 1;
+        v.y = 2 * (v.y - min.y) / (max.y - min.y) - 1;
+        v.z = 2 * (v.z - min.z) / (max.z - min.z) - 1;
+
+        this->vertecies[i] = v;
+    }
+
+    // for (glm::vec3 v : this->vertecies)
+    // {
+    //     std::cout << "X: " << v.x << ", Y: " << v.y << ", Z: " << v.z <<std::endl;
+    // }
 }
