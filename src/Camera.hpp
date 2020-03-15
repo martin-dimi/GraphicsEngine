@@ -13,6 +13,8 @@ public:
     mat3 orientation;
     vec3 position;
 
+    Camera() {}
+
     Camera(float f): Camera(0.0f, 0.0f, 0.0f, f) 
     { 
         // Default constructor

@@ -17,8 +17,11 @@ void loadModel(OBJFile model, Camera camera, DrawingWindow window, bool showWire
     float *depthBuffer = new float[window.width * window.height];
     std::fill_n(depthBuffer, window.width * window.height, std::numeric_limits<float>::infinity());
 
-    for (ModelTriangle modelTriangle : model.faces)
+    for (ModelTriangle modelTriangle : model.loadedFaces)
     {
+        if(modelTriangle.vertices[0].z > 0) continue;
+        if(modelTriangle.vertices[1].z > 0) continue;
+        if(modelTriangle.vertices[2].z > 0) continue;
         CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTriangle, camera, window);
 
         if (showWireframe)
@@ -181,7 +184,6 @@ void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, Colour colour, Dr
 
 void raytrace(OBJFile model, Camera camera, DrawingWindow window)
 {
-
     for (float row = 0; row < window.height; row++)
     {
         for (float col = 0; col < window.width; col++)
@@ -191,14 +193,41 @@ void raytrace(OBJFile model, Camera camera, DrawingWindow window)
             float rayY = (window.halfHeight - row) / window.scale;
             float rayZ = -camera.f;
 
-            glm::vec3 ray = glm::vec3(rayX, rayY, rayZ);
-            ray = glm::normalize(ray);
+            glm::vec3 rayDir = glm::normalize(glm::vec3(rayX, rayY, rayZ));
+            Ray ray = Ray(camera.position, rayDir);
 
             // Fire ray
-            RayTriangleIntersection intersection = utilities::getClosestIntersection(camera, ray, model.faces);
+            RayTriangleIntersection intersection = utilities::getClosestIntersection(camera, ray, model.loadedFaces);
 
             if(intersection.hasHit)
-                window.setPixelColour(col, row, intersection.intersectedTriangle.colour.getPackedInt());
+            {
+                // calculate distance to light
+                // glm::vec3 lightDir = model.lightSource.getLocation() - intersection.intersectionPoint;
+                // Ray shadowRay = Ray(intersection.intersectionPoint, glm::normalize(lightDir));
+
+                // RayTriangleIntersection shadow = utilities::getClosestIntersection(camera, shadowRay, model.faces);
+
+                // // check if the pixel is in shadow
+                // if(!shadow.hasHit)
+                    // window.setPixelColour(col, row, intersection.intersectedTriangle.colour.getPackedInt());
+
+                float distanceToLight = glm::distance(intersection.intersectionPoint, model.lightSource.getLocation());
+                float brightness = 6/ (4 * 3.14f * distanceToLight * distanceToLight);
+
+
+                // glm::vec3 triangleNormal = 1.0f * intersection.intersectedTriangle.calculateNormal();
+                // glm::vec3 dirFromLight   = glm::normalize(model.lightSource.getLocation() - intersection.intersectionPoint);
+
+                // float angle = glm::dot(triangleNormal, dirFromLight);
+                // if(angle < 0) angle = glm::dot(-1.0f * triangleNormal, dirFromLight);
+
+                // brightness = angle;
+
+                if(brightness > 1) brightness = 1;
+                if(brightness < 0) brightness = 0;
+
+                window.setPixelColour(col, row, intersection.intersectedTriangle.colour.getPackedInt(brightness));
+            }
             else
                 window.setPixelColour(col, row, window.backgroundColour.getPackedInt());  
         }

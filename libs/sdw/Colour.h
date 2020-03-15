@@ -33,6 +33,15 @@ class Colour
     {
       return (255<<24) + (red<<16) + (green<<8) + blue;
     }
+
+    u_int32_t getPackedInt(float brightness)
+    {
+      int upadtedRed = red * brightness;
+      int upadtedGreen = green * brightness;
+      int upadtedBlue = blue * brightness;
+      
+      return (255<<24) + (upadtedRed<<16) + (upadtedGreen<<8) + upadtedBlue;
+    }
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Colour& colour)

@@ -1,12 +1,13 @@
 ROOT = $(realpath .)
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
 PROJECT_NAME = Engine
 BINARIES_PATH = $(ROOT)/binary
 SRC_PATH = $(ROOT)/src
 
 # Define the names of key files
-SOURCE_FILE = $(SRC_PATH)/*.cpp
-OBJECT_FILE = $(BINARIES_PATH)/*.o
+SOURCE_FILE = $(call rwildcard, $(SRC_PATH),*.cpp)
+OBJECT_FILE = $(BINARIES_PATH)/*.o 
 EXECUTABLE = $(PROJECT_NAME)
 WINDOW_SOURCE = libs/sdw/DrawingWindow.cpp
 WINDOW_OBJECT = libs/sdw/DrawingWindow.o

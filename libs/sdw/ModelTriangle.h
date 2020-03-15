@@ -3,22 +3,29 @@
 #include "Colour.h"
 #include <string>
 
+using namespace glm;
+
 class ModelTriangle
 {
   public:
-    glm::vec3 vertices[3];
+    vec3 vertices[3];
     Colour colour;
 
     ModelTriangle()
     {
     }
 
-    ModelTriangle(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, Colour trigColour)
+    ModelTriangle(vec3 v0, vec3 v1, vec3 v2, Colour trigColour)
     {
       vertices[0] = v0;
       vertices[1] = v1;
       vertices[2] = v2;
       colour = trigColour;
+    }
+
+    vec3 calculateNormal()
+    {
+      return cross((vertices[1] - vertices[0]), (vertices[2] - vertices[0]));
     }
 };
 

@@ -10,11 +10,10 @@
 #include "OBJFile.h"
 #include "Camera.hpp"
 
-void loadModel(OBJFile model, Camera camera, DrawingWindow window, bool showWireframe);
-void loadImage(PPMImage image, DrawingWindow window);
-
 void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow window);
 void drawTriangle(CanvasTriangle triangle, bool isFilled, DrawingWindow window);
 void drawTriangleTexture(CanvasTriangle triangle, PPMImage image, DrawingWindow window);
 
+void loadModel(OBJFile model, Camera camera, DrawingWindow window, bool showWireframe);
+void loadImage(PPMImage image, DrawingWindow window);
 void raytrace(OBJFile model, Camera camera, DrawingWindow window);

@@ -1,8 +1,8 @@
 #include "OBJFile.h"
 #include "Utils.h"
 
+OBJFile::OBJFile() {}
 OBJFile::OBJFile(string pathMtl, string pathObj) :OBJFile::OBJFile(pathMtl, pathObj, 1.0f) {}
-
 OBJFile::OBJFile(string pathMtl, string pathObj, float scale)
 {
     this->pathMtl = pathMtl;
@@ -133,6 +133,7 @@ void OBJFile::readFace(string* words, Colour colour)
 
     ModelTriangle triangle = ModelTriangle(p1, p2, p3, colour);
     faces.push_back(triangle);
+    loadedFaces.push_back(triangle);
 }
 
 int OBJFile::normaliseChannel(float c)
@@ -158,4 +159,26 @@ void OBJFile::normaliseVertices()
     // {
     //     std::cout << "X: " << v.x << ", Y: " << v.y << ", Z: " << v.z <<std::endl;
     // }
+}
+
+void OBJFile::transformToCameraSpace(Camera camera)
+{
+    // for(ModelTriangle triangle : faces)
+    // {
+    //     triangle.vertices[0] = (triangle.vertices[0] - camera.position) * camera.orientation;
+    //     triangle.vertices[1] = (triangle.vertices[1] - camera.position) * camera.orientation;
+    //     triangle.vertices[2] = (triangle.vertices[2] - camera.position) * camera.orientation;
+    //     // glm::vec3 updated = (point - camera.position) * camera.orientation;
+    // }
+
+    for(int i=0; i<faces.size(); i++)
+    {
+        ModelTriangle triangle = faces[i];
+
+        triangle.vertices[0] = (triangle.vertices[0] - camera.position) * camera.orientation;
+        triangle.vertices[1] = (triangle.vertices[1] - camera.position) * camera.orientation;
+        triangle.vertices[2] = (triangle.vertices[2] - camera.position) * camera.orientation;
+
+        loadedFaces[i] = triangle;
+    }
 }

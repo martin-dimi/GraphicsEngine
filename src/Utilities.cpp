@@ -138,21 +138,21 @@ CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera, Drawi
     return CanvasTriangle(a, b, c, model.colour);
 }
 
-RayTriangleIntersection getClosestIntersection(Camera camera, vec3 rayDir, std::vector<ModelTriangle> triangles)
+RayTriangleIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles)
 {
     RayTriangleIntersection closestIntersection;
 
     // Go through each triangle and check if the ray is intersecting
     for (ModelTriangle triangle : triangles)
     {
-        glm::vec3 v0 = (triangle.vertices[0] - camera.position) * camera.orientation + camera.position;
-        glm::vec3 v1 = (triangle.vertices[1] - camera.position) * camera.orientation + camera.position;
-        glm::vec3 v2 = (triangle.vertices[2] - camera.position) * camera.orientation + camera.position;
+        glm::vec3 v0 = triangle.vertices[0] + camera.position;
+        glm::vec3 v1 = triangle.vertices[1] + camera.position;
+        glm::vec3 v2 = triangle.vertices[2] + camera.position;
 
         vec3 e0 = v1 - v0;
         vec3 e1 = v2 - v0;
-        vec3 SPVector = camera.position - v0;
-        mat3 DEMatrix = mat3(-rayDir, e0, e1);
+        vec3 SPVector = ray.getStart() - v0;
+        mat3 DEMatrix = mat3(-ray.getDirection(), e0, e1);
 
         // [0] - the distance along the ray from the camera to the intersection point
         // [1] - the proportion along the triangle's first edge that the intersection point appears
@@ -169,7 +169,8 @@ RayTriangleIntersection getClosestIntersection(Camera camera, vec3 rayDir, std::
         if (closestIntersection.distanceFromCamera > distanceFromCamera)
         {
             closestIntersection.distanceFromCamera = distanceFromCamera;
-            closestIntersection.intersectionPoint = e0 * u + e1 * v;
+            // closestIntersection.intersectionPoint = v0 + u*e0 + v*e1;
+            closestIntersection.intersectionPoint = ray.getStart() + distanceFromCamera * ray.getDirection();
             closestIntersection.intersectedTriangle = triangle;
             closestIntersection.hasHit = true;
         }
@@ -189,12 +190,14 @@ std::string printVec(glm::vec3 vec) {
 CanvasPoint convertToCanvasPoint(glm::vec3 point, Camera camera, DrawingWindow window)
 {
     // Model space -> Camera space
-    glm::vec3 updated = (point - camera.position) * camera.orientation;
+    // glm::vec3 updated = (point - camera.position) * camera.orientation;
+    // glm::vec3 updated = (point - camera.position) * camera.orientation + camera.position;
+
 
     // Camera space -> Canvas Space
-    float canvasX = window.scale * (camera.f *  updated.x) / (-updated.z) + window.width / 2.0f;
-    float canvasY = window.scale * (camera.f * -updated.y) / (-updated.z) + window.height / 2.0f;
-    float canvasD = 1.0f / updated.z;
+    float canvasX = window.scale * (camera.f *  point.x) / (-point.z) + window.width / 2.0f;
+    float canvasY = window.scale * (camera.f * -point.y) / (-point.z) + window.height / 2.0f;
+    float canvasD = 1.0f / point.z;
 
     return CanvasPoint(canvasX, canvasY, canvasD);
 }

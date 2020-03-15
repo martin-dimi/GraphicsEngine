@@ -9,6 +9,8 @@
 #include "Colour.h"
 #include "CanvasPoint.h"
 #include "ModelTriangle.h"
+#include "model/Light.hpp"
+#include "Camera.hpp"
 
 using namespace std;
 
@@ -33,9 +35,14 @@ class OBJFile
         void readFace(string* words, Colour colour);
 
     public:
+        OBJFile();
         OBJFile(string pathMtl, string pathObj);
         OBJFile(string pathMtl, string pathObj, float scale);
         vector<ModelTriangle> faces;
+        vector<ModelTriangle> loadedFaces;
+        Light lightSource;
+
+        void transformToCameraSpace(Camera camera);
 
 };
 
