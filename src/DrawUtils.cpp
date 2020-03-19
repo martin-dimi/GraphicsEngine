@@ -22,6 +22,7 @@ void loadModel(OBJFile model, Camera camera, DrawingWindow window, bool showWire
         if(modelTriangle.vertices[0].z > 0) continue;
         if(modelTriangle.vertices[1].z > 0) continue;
         if(modelTriangle.vertices[2].z > 0) continue;
+        
         CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTriangle, camera, window);
 
         if (showWireframe)
@@ -201,31 +202,22 @@ void raytrace(OBJFile model, Camera camera, DrawingWindow window)
 
             if(intersection.hasHit)
             {
-                // calculate distance to light
-                // glm::vec3 lightDir = model.lightSource.getLocation() - intersection.intersectionPoint;
-                // Ray shadowRay = Ray(intersection.intersectionPoint, glm::normalize(lightDir));
+                glm::vec3 light = (model.lightSource.getLocation() - camera.position) * camera.orientation + camera.position;
 
-                // RayTriangleIntersection shadow = utilities::getClosestIntersection(camera, shadowRay, model.faces);
+                float distanceToLight = glm::distance(intersection.intersectionPoint, light);
+                float brightness = model.lightSource.getIntensity() / (4 * 3.14f * distanceToLight * distanceToLight);
 
-                // // check if the pixel is in shadow
-                // if(!shadow.hasHit)
-                    // window.setPixelColour(col, row, intersection.intersectedTriangle.colour.getPackedInt());
+                glm::vec3 triangleNormal = intersection.intersectedTriangle.calculateNormal();
+                glm::vec3 dirToLight     = glm::normalize(light - intersection.intersectionPoint);
 
-                float distanceToLight = glm::distance(intersection.intersectionPoint, model.lightSource.getLocation());
-                float brightness = 6/ (4 * 3.14f * distanceToLight * distanceToLight);
+                float angle = glm::dot(dirToLight, triangleNormal);
 
-
-                // glm::vec3 triangleNormal = 1.0f * intersection.intersectedTriangle.calculateNormal();
-                // glm::vec3 dirFromLight   = glm::normalize(model.lightSource.getLocation() - intersection.intersectionPoint);
-
-                // float angle = glm::dot(triangleNormal, dirFromLight);
-                // if(angle < 0) angle = glm::dot(-1.0f * triangleNormal, dirFromLight);
-
-                // brightness = angle;
+                // if(angle > 0 && angle < 1) brightness *= angle;
+                // if(angle <= 0) brightness = 0;
 
                 if(brightness > 1) brightness = 1;
-                if(brightness < 0) brightness = 0;
-
+                // if(brightness <= 0.15f) brightness = 0.15f;
+                
                 window.setPixelColour(col, row, intersection.intersectedTriangle.colour.getPackedInt(brightness));
             }
             else

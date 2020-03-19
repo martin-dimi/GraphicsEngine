@@ -43,6 +43,5 @@ class OBJFile
         Light lightSource;
 
         void transformToCameraSpace(Camera camera);
-
 };
 

@@ -9,6 +9,7 @@ class CanvasPoint
     float y;
     double depth;
     float brightness;
+    
     TexturePoint texturePoint;
 
     CanvasPoint()

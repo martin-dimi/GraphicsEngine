@@ -24,7 +24,7 @@ Camera camera        = Camera(0.0f, 0.0f, 4.0f, 1.0f);
 OBJFile model        = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 1.0f);
 EventHandler handler = EventHandler(window, camera, model);
 
-Light lightSource = Light(0.0f, 0.8f, -0.0f, 100.f);
+Light lightSource = Light(0.0f, 0.9f, 0.0f, 5.0f);
 unordered_map<string, int> state;
 
 bool isSpinning = false;

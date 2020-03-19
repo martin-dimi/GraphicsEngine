@@ -27,4 +27,14 @@ class Light {
             return this->location;
         }
 
+        float getIntensity()
+        {
+            return this->intensity;
+        }
+
+        void setLocation(glm::vec3 location)
+        {
+            this->location = location;
+        }
+
 };
