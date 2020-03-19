@@ -14,7 +14,7 @@ WINDOW_OBJECT = libs/sdw/DrawingWindow.o
 
 # Build settings
 COMPILER = g++
-COMPILER_OPTIONS = -c -pipe -Wall -std=c++11
+COMPILER_OPTIONS = -c -pipe -Wall -std=c++11 -I./src
 DEBUG_OPTIONS = -ggdb -g3
 FUSSY_OPTIONS = -pedantic
 # FUSSY_OPTIONS = -Werror -pedantic

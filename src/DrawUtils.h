@@ -6,8 +6,8 @@
 #include <RayTriangleIntersection.h>
 #include <Colour.h>
 #include <glm/glm.hpp>
-#include "PPMImage.h"
-#include "OBJFile.h"
+#include "external/PPMImage.h"
+#include "external/OBJFile.h"
 #include "Camera.hpp"
 
 void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow window);

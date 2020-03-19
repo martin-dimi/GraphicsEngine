@@ -1,9 +1,9 @@
 #include <glm/glm.hpp>
 #include <DrawingWindow.h>
 #include "Camera.hpp"
-#include "OBJFile.h"
 #include "DrawUtils.h"
-#include "PPMImage.h"
+#include "external/PPMImage.h"
+#include "external/OBJFile.h"
 #include "Utilities.h"
 
 using namespace std;

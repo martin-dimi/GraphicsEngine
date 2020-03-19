@@ -4,7 +4,7 @@
 #include <fstream>
 #include <vector>
 #include "DrawUtils.h"
-#include "OBJFile.h"
+#include "external/OBJFile.h"
 #include "Camera.hpp"
 #include "EventHandler.cpp"
 #include "model/Light.hpp"
@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
 
 void draw()
 {
-    if(state["displayMode"] == 0)
-    {
-        window.clearPixels();
-        loadModel(model, camera, window, true);
-    }
+    // if(state["displayMode"] == 0)
+    // {
+    //     window.clearPixels();
+    //     loadModel(model, camera, window, true);
+    // }
 
     // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
     // drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
