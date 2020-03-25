@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <Colour.h>
+#include <DrawingWindow.h>
 
 class PPMImage {
 
@@ -23,6 +24,5 @@ class PPMImage {
         Colour getPixelValueAt(int index);
         Colour getPixelValueAt(int x, int y);
 
-        void saveImage(std::string name);
-
+        static void saveImage(std::string name, DrawingWindow &window);
 };

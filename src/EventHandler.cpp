@@ -54,6 +54,7 @@ class EventHandler {
                 // OTHER
                 else if (event.key.keysym.sym == SDLK_c) window.clearPixels();
                 else if (event.key.keysym.sym == SDLK_i) displayImage();
+                else if (event.key.keysym.sym == SDLK_p) saveImage();
                 else if (event.key.keysym.sym == SDLK_m) switchMode();
 
                 else if (event.key.keysym.sym == SDLK_SPACE) triggerAnimation();
@@ -79,6 +80,11 @@ class EventHandler {
         {
             PPMImage image = PPMImage("assets/texture.ppm");
             loadImage(image, window);
+        }
+
+        void saveImage()
+        {
+            PPMImage::saveImage("images/testImage", window);
         }
 
         void triggerAnimation()

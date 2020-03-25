@@ -105,7 +105,26 @@ bool PPMImage::readPPMFile(std::ifstream &imageFile)
     return true;
 }
 
-void PPMImage::saveImage(std::string name)
+void PPMImage::saveImage(std::string name, DrawingWindow &window)
 {
-    
+    std::ofstream imageFile(name + ".ppm");
+
+    // metadata
+    imageFile << "P6" << std::endl;
+    imageFile << window.width << " " << window.height << std::endl;
+    imageFile << "255" << std::endl;
+
+    // image
+    for(int row=0; row<window.height; row++)
+    {
+        for(int col=0; col<window.width; col++)
+        {
+            Colour colour = Colour(window.getPixelColour(col, row));
+
+            imageFile << (char) colour.red << (char) colour.green << (char) colour.blue;
+        }
+    }
+
+    // Close the file
+    imageFile.close();
 }

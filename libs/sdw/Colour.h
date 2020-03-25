@@ -29,6 +29,14 @@ class Colour
       blue = b;
     }
 
+    Colour(uint32_t packedColour)
+    {
+      name = "";
+      red = (packedColour & 0x00FF0000) >> 16;
+      green = (packedColour & 0x0000FF00) >> 8;
+      blue = (packedColour & 0x000000FF);
+    }
+
     u_int32_t getPackedInt()
     {
       return (255<<24) + (red<<16) + (green<<8) + blue;
