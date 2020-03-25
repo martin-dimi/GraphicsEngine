@@ -205,7 +205,7 @@ void raytrace(OBJFile model, Camera camera, DrawingWindow window)
                 glm::vec3 light = (model.lightSource.getLocation() - camera.position) * camera.orientation + camera.position;
 
                 float distanceToLight = glm::distance(intersection.intersectionPoint, light);
-                float brightness = model.lightSource.getIntensity() / (4 * 3.14f * distanceToLight * distanceToLight);
+                float brightness = 2.0f * model.lightSource.getIntensity() / (4 * 3.14f * distanceToLight * distanceToLight);
 
                 glm::vec3 triangleNormal = intersection.intersectedTriangle.calculateNormal();
                 glm::vec3 dirToLight     = glm::normalize(light - intersection.intersectionPoint);
