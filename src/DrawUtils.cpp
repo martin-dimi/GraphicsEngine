@@ -212,11 +212,11 @@ void raytrace(OBJFile model, Camera camera, DrawingWindow window)
 
                 float angle = glm::dot(dirToLight, triangleNormal);
 
-                // if(angle > 0 && angle < 1) brightness *= angle;
-                // if(angle <= 0) brightness = 0;
+                if(angle > 0 && angle < 1) brightness *= angle;
+                if(angle <= 0) brightness = 0;
 
                 if(brightness > 1) brightness = 1;
-                // if(brightness <= 0.15f) brightness = 0.15f;
+                if(brightness <= 0.2f) brightness = 0.2f;
                 
                 window.setPixelColour(col, row, intersection.intersectedTriangle.colour.getPackedInt(brightness));
             }
