@@ -3,10 +3,10 @@
 #include <glm/glm.hpp>
 #include <fstream>
 #include <vector>
-#include "DrawUtils.h"
+#include "draw/Drawer.hpp"
 #include "external/OBJFile.h"
-#include "Camera.hpp"
 #include "EventHandler.cpp"
+#include "model/Camera.hpp"
 #include "model/Light.hpp"
 #include "Utilities.h"
 
@@ -24,7 +24,7 @@ Camera camera        = Camera(0.0f, 0.0f, 4.0f, 1.0f);
 OBJFile model        = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 1.0f);
 EventHandler handler = EventHandler(window, camera, model);
 
-Light lightSource = Light(0.0f, 0.9f, 0.0f, 5.0f);
+Light lightSource = Light(0.0f, 0.9f, 0.0f, 25.0f);
 unordered_map<string, int> state;
 
 bool isSpinning = false;
@@ -55,7 +55,7 @@ void draw()
     if(state["displayMode"] == 0)
     {
         window.clearPixels();
-        loadModel(model, camera, window, true);
+        drawModelWireframe(model, camera, window);
     }
 
     // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);

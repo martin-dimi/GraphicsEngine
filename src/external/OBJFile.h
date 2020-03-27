@@ -10,13 +10,12 @@
 #include "CanvasPoint.h"
 #include "ModelTriangle.h"
 #include "model/Light.hpp"
-#include "Camera.hpp"
+#include "model/Camera.hpp"
 
 using namespace std;
 
 class OBJFile 
 {
-
     private:
         string pathMtl;
         string pathObj;

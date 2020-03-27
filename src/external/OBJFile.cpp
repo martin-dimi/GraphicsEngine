@@ -132,6 +132,7 @@ void OBJFile::readFace(string* words, Colour colour)
     glm::vec3 p3 = vertecies[p3Index];
 
     ModelTriangle triangle = ModelTriangle(p1, p2, p3, colour);
+    triangle.id = faces.size();
     faces.push_back(triangle);
     loadedFaces.push_back(triangle);
 }

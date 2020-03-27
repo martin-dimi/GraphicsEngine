@@ -138,13 +138,15 @@ CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera, Drawi
     return CanvasTriangle(a, b, c, model.colour);
 }
 
-RayTriangleIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles)
+RayTriangleIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles, int ignoreId)
 {
     RayTriangleIntersection closestIntersection;
 
     // Go through each triangle and check if the ray is intersecting
     for (ModelTriangle triangle : triangles)
     {
+        if(ignoreId == triangle.id) continue;
+        
         glm::vec3 v0 = triangle.vertices[0] + camera.position;
         glm::vec3 v1 = triangle.vertices[1] + camera.position;
         glm::vec3 v2 = triangle.vertices[2] + camera.position;
@@ -158,19 +160,18 @@ RayTriangleIntersection getClosestIntersection(Camera camera, Ray ray, std::vect
         // [1] - the proportion along the triangle's first edge that the intersection point appears
         // [2] - the proportion along the triangle's second edge that the intersection point appears
         vec3 solution = inverse(DEMatrix) * SPVector;
-        float distanceFromCamera = solution[0];
+        float distance = solution[0];
         float u = solution[1];
         float v = solution[2];
 
         // verify there is an intersection
-        if (distanceFromCamera < 0 || u < 0 || v < 0 || v + u > 1)
+        if (distance < 0 || u < 0 || v < 0 || v + u > 1)
             continue;
 
-        if (closestIntersection.distanceFromCamera > distanceFromCamera)
+        if (closestIntersection.distance > distance)
         {
-            closestIntersection.distanceFromCamera = distanceFromCamera;
-            // closestIntersection.intersectionPoint = v0 + u*e0 + v*e1;
-            closestIntersection.intersectionPoint = ray.getStart() + distanceFromCamera * ray.getDirection();
+            closestIntersection.distance = distance;
+            closestIntersection.intersectionPoint = ray.getStart() + distance * ray.getDirection();
             closestIntersection.intersectedTriangle = triangle;
             closestIntersection.hasHit = true;
         }

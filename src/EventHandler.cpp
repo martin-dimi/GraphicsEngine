@@ -1,7 +1,7 @@
 #include <glm/glm.hpp>
 #include <DrawingWindow.h>
-#include "Camera.hpp"
-#include "DrawUtils.h"
+#include "model/Camera.hpp"
+#include "draw/Drawer.hpp"
 #include "external/PPMImage.h"
 #include "external/OBJFile.h"
 #include "Utilities.h"
@@ -79,7 +79,7 @@ class EventHandler {
         void displayImage()
         {
             PPMImage image = PPMImage("assets/texture.ppm");
-            loadImage(image, window);
+            drawImage(image, window);
         }
 
         void saveImage()
@@ -100,17 +100,17 @@ class EventHandler {
             if(mode == 0) 
             {
                 std::cout << "Switching to wireframe" << std::endl;
-                loadModel(model, camera, window, true);
+                drawModelWireframe(model, camera, window);
             }
             else if(mode == 1) 
             {
                 std::cout << "Switching to rasterizing" << std::endl;
-                loadModel(model, camera, window, false);
+                drawModel(model, camera, window, false);
             }
             else if(mode == 2)
             {
                 std::cout << "Switching to raytracing" << std::endl;
-                raytrace(model, camera, window);
+                drawModel(model, camera, window, true);
             }
 
             (*state)["displayMode"] = mode;

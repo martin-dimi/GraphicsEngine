@@ -8,20 +8,20 @@ class RayTriangleIntersection
 {
 public:
     glm::vec3 intersectionPoint;
-    float distanceFromCamera;
+    float distance;
     ModelTriangle intersectedTriangle;
     bool hasHit = false;
 
     RayTriangleIntersection()
     {
-        distanceFromCamera = std::numeric_limits<float>::max();
+        distance = std::numeric_limits<float>::max();
     }
 
     RayTriangleIntersection(glm::vec3 point, float distance, ModelTriangle triangle)
     {
-        intersectionPoint = point;
-        distanceFromCamera = distance;
-        intersectedTriangle = triangle;
+        this->intersectionPoint = point;
+        this->distance = distance;
+        this->intersectedTriangle = triangle;
     }
 };
 

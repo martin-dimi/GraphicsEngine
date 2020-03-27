@@ -8,6 +8,7 @@ using namespace glm;
 class ModelTriangle
 {
   public:
+    int id;
     vec3 vertices[3];
     Colour colour;
 
@@ -25,7 +26,7 @@ class ModelTriangle
 
     vec3 calculateNormal()
     {
-      return cross((vertices[1] - vertices[0]), (vertices[2] - vertices[0]));
+      return normalize(cross((vertices[1] - vertices[0]), (vertices[2] - vertices[0])));
     }
 };
 
