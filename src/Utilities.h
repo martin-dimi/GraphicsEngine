@@ -3,10 +3,10 @@
 #include <CanvasPoint.h>
 #include <CanvasTriangle.h>
 #include <ModelTriangle.h>
-#include <RayTriangleIntersection.h>
 #include <DrawingWindow.h>
 #include "model/Camera.hpp"
 #include "model/Ray.hpp"
+#include "model/RayIntersection.hpp"
 
 using namespace glm;
 
@@ -22,5 +22,5 @@ std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to, int steps
 CanvasPoint getTriangleMidPoint(CanvasTriangle triangle);
 CanvasTriangle convertToCanvasTriangle(ModelTriangle point, Camera camera, DrawingWindow window);
 
-RayTriangleIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles, int ignoreId);
+RayIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles, int ignoreId);
 } // namespace utilities

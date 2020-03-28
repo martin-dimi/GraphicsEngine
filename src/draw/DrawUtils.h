@@ -3,7 +3,6 @@
 #include <DrawingWindow.h>
 #include <CanvasPoint.h>
 #include <CanvasTriangle.h>
-#include <RayTriangleIntersection.h>
 #include <Colour.h>
 #include <glm/glm.hpp>
 #include "external/PPMImage.h"

@@ -1,4 +1,3 @@
-#include <RayTriangleIntersection.h>
 #include <Colour.h>
 #include <glm/glm.hpp>
 

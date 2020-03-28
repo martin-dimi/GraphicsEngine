@@ -20,7 +20,7 @@ const int WIDTH = 600;
 const int HEIGHT = 400;
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-Camera camera        = Camera(0.0f, 0.0f, 4.0f, 1.0f);
+Camera camera        = Camera(0.0f, 0.0f, 3.0f, 1.0f);
 OBJFile model        = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 1.0f);
 EventHandler handler = EventHandler(window, camera, model);
 

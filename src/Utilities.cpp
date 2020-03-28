@@ -138,9 +138,9 @@ CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera, Drawi
     return CanvasTriangle(a, b, c, model.colour);
 }
 
-RayTriangleIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles, int ignoreId)
+RayIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles, int ignoreId)
 {
-    RayTriangleIntersection closestIntersection;
+    RayIntersection closestIntersection;
 
     // Go through each triangle and check if the ray is intersecting
     for (ModelTriangle triangle : triangles)
@@ -174,6 +174,7 @@ RayTriangleIntersection getClosestIntersection(Camera camera, Ray ray, std::vect
             closestIntersection.intersectionPoint = ray.getStart() + distance * ray.getDirection();
             closestIntersection.intersectedTriangle = triangle;
             closestIntersection.hasHit = true;
+            closestIntersection.intersectionColour = Colour(triangle.colour);
         }
     }
 
