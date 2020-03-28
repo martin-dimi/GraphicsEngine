@@ -145,13 +145,28 @@ int OBJFile::normaliseChannel(float c)
 void OBJFile::normaliseVertices()
 {
 
+    float xDiff = max.x - min.x;
+    float yDiff = max.y - min.y;
+    float zDiff = max.z - min.z;
+
+    float scale = std::min(
+        std::min(2.0f / xDiff, 2.0f / yDiff),
+        2.0f / zDiff
+    );
+
     for(int i=0; i < this->vertecies.size(); i++)
     {
         glm::vec3 v = this->vertecies[i];
 
-        v.x = 2 * (v.x - min.x) / (max.x - min.x) - 1;
-        v.y = 2 * (v.y - min.y) / (max.y - min.y) - 1;
-        v.z = 2 * (v.z - min.z) / (max.z - min.z) - 1;
+        // Vertex[i].x=(Vertex[i].x-0.5*(A0.x+B0.x))*scale+0.5*(A.x+B.x)
+
+        v.x = (v.x-0.5f*(min.x + max.x)) * scale + 0.5f*(0);
+        v.y = (v.y-0.5f*(min.y + max.y)) * scale + 0.5f*(0);
+        v.z = (v.z-0.5f*(min.z + max.z)) * scale + 0.5f*(0);
+
+        // v.x = 2 * (v.x - min.x) / (max.x - min.x) - 1;
+        // v.y = 2 * (v.y - min.y) / (max.y - min.y) - 1;
+        // v.z = 2 * (v.z - min.z) / (max.z - min.z) - 1;
 
         this->vertecies[i] = v;
     }

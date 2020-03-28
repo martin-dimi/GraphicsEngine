@@ -26,7 +26,7 @@ void draw(OBJFile model, Camera camera, DrawingWindow window)
 // PRIVATE
 void raytrace(int x, int y, DrawingWindow window, Camera camera, OBJFile model)
 {
-    RayIntersection intersection = aliasRGSS(x, y, window, camera, model);
+    RayIntersection intersection = noAliasing(x, y, window, camera, model);
 
     if(intersection.hasHit)
         window.setPixelColour(x, y, intersection.intersectionColour.getPackedInt(intersection.intersectionBrightness));
