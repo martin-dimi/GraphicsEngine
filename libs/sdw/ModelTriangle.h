@@ -10,6 +10,7 @@ class ModelTriangle
   public:
     int id;
     vec3 vertices[3];
+    vec3 texture[3];
     Colour colour;
 
     ModelTriangle()

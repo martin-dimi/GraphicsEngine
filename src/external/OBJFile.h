@@ -9,6 +9,7 @@
 #include "Colour.h"
 #include "CanvasPoint.h"
 #include "ModelTriangle.h"
+#include "external/PPMImage.h"
 #include "model/Light.hpp"
 #include "model/Camera.hpp"
 
@@ -17,26 +18,35 @@ using namespace std;
 class OBJFile 
 {
     private:
-        string pathMtl;
-        string pathObj;
-        float scale;
+        string path;
+        string objName;
         unordered_map<string, Colour> pallete;
         vector<glm::vec3> vertecies;
+        vector<glm::vec2> textureVertecies;
+
+        PPMImage texture;
+        float scale;
         glm::vec3 max;
         glm::vec3 min;
 
-        void readPallet();
-        void readTriangles();
-        int normaliseChannel(float c);
-        void normaliseVertices();
-        void readVertex(string* words);
+        void read();
+        void readMaterials(ifstream* file);
+        void readVertices(ifstream* file);
+        void readFaces(ifstream* file);
+
+        void readPallet(string materialName);
         Colour readColour(string* words);
         void readFace(string* words, Colour colour);
+        void readVertex(string* words);
+        void readTextureVertex(string* words);
+
+        int normaliseChannel(float c);
+        void normaliseVertices();
 
     public:
         OBJFile();
-        OBJFile(string pathMtl, string pathObj);
-        OBJFile(string pathMtl, string pathObj, float scale);
+        OBJFile(string pathObj);
+        OBJFile(string pathObj, float scale);
         vector<ModelTriangle> faces;
         vector<ModelTriangle> loadedFaces;
         Light lightSource;

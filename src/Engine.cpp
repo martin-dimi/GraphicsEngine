@@ -21,8 +21,8 @@ const int HEIGHT = 400;
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 Camera camera        = Camera(0.0f, 0.0f, 3.0f, 1.0f);
-OBJFile model        = OBJFile("assets/cornell-box.mtl", "assets/cornell-box.obj", 1.0f);
-// OBJFile model        = OBJFile("assets/HackspaceLogo/materials.mtl", "assets/HackspaceLogo/logo.obj", 1.0f);
+// OBJFile model        = OBJFile("assets/CornellBox/cornell-box.obj", 1.0f);
+OBJFile model        = OBJFile("assets/HackSpaceLogo/logo.obj", 1.0f);
 EventHandler handler = EventHandler(window, camera, model);
 
 Light lightSource = Light(0.0f, 0.9f, 0.0f, 40.0f);

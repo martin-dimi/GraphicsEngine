@@ -2,84 +2,89 @@
 #include "Utils.h"
 
 OBJFile::OBJFile() {}
-OBJFile::OBJFile(string pathMtl, string pathObj) :OBJFile::OBJFile(pathMtl, pathObj, 1.0f) {}
-OBJFile::OBJFile(string pathMtl, string pathObj, float scale)
+OBJFile::OBJFile(string pathObj) :OBJFile::OBJFile(pathObj, 1.0f) {}
+OBJFile::OBJFile(string pathObj, float scale)
 {
-    this->pathMtl = pathMtl;
-    this->pathObj = pathObj;
+    unsigned found = pathObj.find_last_of("/");
+    this->path = pathObj.substr(0 , found) + "/";
+    this->objName = pathObj.substr(found + 1);
+
     this->scale = scale;
     this->max = glm::vec3(-1000.0f, -1000.0f, -1000.0f);
     this->min = glm::vec3(1000.0f, 1000.0f, 1000.0f);
 
-    readPallet();   
-    readTriangles();
+    read();
 
     cout << "Number of triangles: " << faces.size() << endl;
 }
 
-void OBJFile::readPallet()
+void OBJFile::read()
 {
-    ifstream materialFile(pathMtl);
+    ifstream file(path + objName);
 
-    if (materialFile.is_open()) 
+    if (file) 
     {
-        string line;
-        while(getline(materialFile, line))
-        {
-            if(line.size() == 0) continue;
+        // Read Materials
+        readMaterials(&file);
 
-            string* words = split(line, ' ');
-            if(words[0] == "newmtl")
-            {
-                string name = words[1];
-                getline(materialFile, line);
-                string* definition = split(line, ' ');
+        // Reset file
+        file.clear();
+        file.seekg(0);
 
-                int redChannel = this->normaliseChannel(stof(definition[1]));
-                int greenChannel = this->normaliseChannel(stof(definition[2]));
-                int blueChannel = this->normaliseChannel(stof(definition[3]));
-
-                Colour colour = Colour(name, redChannel, greenChannel, blueChannel);
-                this->pallete[name] = colour;
-            }
-        }
-    }
-    else cout << "No such file: " << pathObj << endl;
-}
-
-void OBJFile::readTriangles()
-{
-    ifstream geometryFile(pathObj);
-
-    if (geometryFile.is_open()) 
-    {
-        string line;
-
-        // Read all the verticies
-        while(getline(geometryFile, line))
-        {
-            if(line.size() == 0) continue;
-            string* words = split(line, ' ');
-
-            if(words[0] == "v") readVertex(words);
-        }
-
+        // Read and normalize verticies
+        readVertices(&file);
         normaliseVertices();
 
-        // Read all the faces
-        geometryFile.clear();
-        geometryFile.seekg(0);
-        Colour selectedColour = Colour(255, 255, 255);
-        while(getline(geometryFile, line))
-        {
-            if(line.size() == 0) continue;
-            string* words = split(line, ' ');
+        // Reset file
+        file.clear();
+        file.seekg(0);
 
-            if(words[0] == "usemtl") selectedColour = readColour(words);
-            else if(words[0] == "f") readFace(words, selectedColour);
-        }
+        // Read faces
+        readFaces(&file);
     }
-    else cout << "No such file: " << pathObj << endl;
+    else cout << "No such OBJ file: " << path + objName << endl;
+}
+
+void OBJFile::readMaterials(ifstream* file)
+{
+    string line;
+
+    while(getline(*file, line))
+    {
+        if(line.size() == 0) continue;
+        string* words = split(line, ' ');
+
+        if(words[0] == "mtllib") readPallet(words[1]);
+    }
+}
+
+void OBJFile::readVertices(ifstream* file)
+{
+    string line;
+
+    while(getline(*file, line))
+    {
+        if(line.size() == 0) continue;
+        string* words = split(line, ' ');
+
+        if(words[0] == "v") readVertex(words);
+        if(words[0] == "vt") readTextureVertex(words);
+    }
+}
+
+void OBJFile::readFaces(ifstream* file)
+{
+    string line;
+    Colour selectedColour = Colour(255, 255, 255);
+
+    while(getline(*file, line))
+    {
+        if(line.size() == 0) continue;
+        string* words = split(line, ' ');
+
+        if(words[0] == "usemtl") selectedColour = readColour(words);
+        else if(words[0] == "f") readFace(words, selectedColour);
+    }
 }
 
 void OBJFile::readVertex(string* words) 
@@ -87,10 +92,6 @@ void OBJFile::readVertex(string* words)
     float x = stof(words[1]) * scale;
     float y = stof(words[2]) * scale;
     float z = stof(words[3]) * scale;
-
-    // float x = stof(words[1]);
-    // float y = stof(words[2]);
-    // float z = stof(words[3]);
 
     if(x > this->max.x) this->max.x = x;
     if(y > this->max.y) this->max.y = y;
@@ -102,6 +103,15 @@ void OBJFile::readVertex(string* words)
 
     glm::vec3 v = glm::vec3(x, y, z);
     this->vertecies.push_back(v);
+}
+
+void OBJFile::readTextureVertex(string* words) 
+{
+    float x = stof(words[1]) * scale;
+    float y = stof(words[2]) * scale;
+
+    glm::vec2 v = glm::vec2(x, y);
+    this->textureVertecies.push_back(v);
 }
 
 Colour OBJFile::readColour(string* words)
@@ -133,6 +143,25 @@ void OBJFile::readFace(string* words, Colour colour)
 
     ModelTriangle triangle = ModelTriangle(p1, p2, p3, colour);
     triangle.id = faces.size();
+
+    // Check if it has a texture coordinate
+    if(words[1].substr(words[1].find('/')+1, words[1].length()).length() > 0)
+    {
+        int t1Index = stoi(words[1].substr(words[1].find('/')+1, words[1].length())) - 1;
+        int t2Index = stoi(words[2].substr(words[2].find('/')+1, words[2].length())) - 1;
+        int t3Index = stoi(words[3].substr(words[3].find('/')+1, words[3].length())) - 1;
+
+        if(t2Index >= textureVertecies.size() || t1Index >= textureVertecies.size() || t3Index >= textureVertecies.size())
+        {
+            cout << "Accessing an undefined texture vertex" << endl;
+            return;
+        }
+
+        triangle.texture[0] = vertecies[t1Index];
+        triangle.texture[1] = vertecies[t2Index];
+        triangle.texture[2] = vertecies[t3Index];
+    }
+
     faces.push_back(triangle);
     loadedFaces.push_back(triangle);
 }
@@ -179,14 +208,6 @@ void OBJFile::normaliseVertices()
 
 void OBJFile::transformToCameraSpace(Camera camera)
 {
-    // for(ModelTriangle triangle : faces)
-    // {
-    //     triangle.vertices[0] = (triangle.vertices[0] - camera.position) * camera.orientation;
-    //     triangle.vertices[1] = (triangle.vertices[1] - camera.position) * camera.orientation;
-    //     triangle.vertices[2] = (triangle.vertices[2] - camera.position) * camera.orientation;
-    //     // glm::vec3 updated = (point - camera.position) * camera.orientation;
-    // }
-
     for(int i=0; i<faces.size(); i++)
     {
         ModelTriangle triangle = faces[i];
@@ -197,4 +218,40 @@ void OBJFile::transformToCameraSpace(Camera camera)
 
         loadedFaces[i] = triangle;
     }
+}
+
+void OBJFile::readPallet(string materialName)
+{
+    string materialPath = path + materialName;
+    ifstream materialFile(materialPath);
+
+    if (materialFile) 
+    {
+        string line;
+        while(getline(materialFile, line))
+        {
+            if(line.size() == 0) continue;
+
+            string* words = split(line, ' ');
+            if(words[0] == "newmtl")
+            {
+                string name = words[1];
+                getline(materialFile, line);
+                string* definition = split(line, ' ');
+
+                int redChannel = this->normaliseChannel(stof(definition[1]));
+                int greenChannel = this->normaliseChannel(stof(definition[2]));
+                int blueChannel = this->normaliseChannel(stof(definition[3]));
+
+                Colour colour = Colour(name, redChannel, greenChannel, blueChannel);
+                this->pallete[name] = colour;
+            }
+
+            else if (words[0] == "map_Kd")
+            {
+                this->texture = PPMImage(path + words[1]);
+            }
+        }
+    }
+    else cout << "No such material file: " << materialPath<< endl;
 }

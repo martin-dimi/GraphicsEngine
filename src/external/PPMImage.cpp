@@ -1,5 +1,6 @@
 #include "PPMImage.h"
 
+PPMImage::PPMImage(){}
 PPMImage::PPMImage(std::string path)
 {
     this->path = path;
@@ -16,6 +17,8 @@ PPMImage::PPMImage(std::string path)
         else
             std::cout << "Could not read image" << std::endl;
     }
+    else
+        std::cout << "Could not find image: " << path << std::endl;
 }
 
 Colour PPMImage::getPixelValueAt(int index) 

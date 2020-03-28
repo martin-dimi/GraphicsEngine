@@ -20,6 +20,7 @@ class PPMImage {
     public:
         int width, height;
         
+        PPMImage();
         PPMImage(std::string path);
         Colour getPixelValueAt(int index);
         Colour getPixelValueAt(int x, int y);
