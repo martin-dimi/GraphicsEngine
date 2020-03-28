@@ -10,6 +10,7 @@ Ray calculateRay(float x, float y, DrawingWindow window, Camera camera);
 RayIntersection fireRay(Ray ray, Camera camera, OBJFile model);
 RayIntersection noAliasing(float x, float y, DrawingWindow window, Camera camera, OBJFile model);
 RayIntersection aliasQuincunx(float x, float y, DrawingWindow window, Camera camera, OBJFile model);
+RayIntersection aliasRGSS(float x, float y, DrawingWindow window, Camera camera, OBJFile model);
 
 // PUBLIC
 namespace raytracer
@@ -25,7 +26,7 @@ void draw(OBJFile model, Camera camera, DrawingWindow window)
 // PRIVATE
 void raytrace(int x, int y, DrawingWindow window, Camera camera, OBJFile model)
 {
-    RayIntersection intersection = noAliasing(x, y, window, camera, model);
+    RayIntersection intersection = aliasRGSS(x, y, window, camera, model);
 
     if(intersection.hasHit)
         window.setPixelColour(x, y, intersection.intersectionColour.getPackedInt(intersection.intersectionBrightness));
@@ -109,6 +110,56 @@ RayIntersection aliasQuincunx(float x, float y, DrawingWindow window, Camera cam
 
             float w = 0.125f;
             if(i==0) w = 0.5f;
+
+            colour.red += w * intersection.intersectedTriangle.colour.red;
+            colour.green += w * intersection.intersectedTriangle.colour.green;
+            colour.blue += w * intersection.intersectedTriangle.colour.blue;
+            brightness += w * intersection.intersectionBrightness;
+        }
+    }
+
+    if(haveHit > 0)
+    {
+        // colour.red = std::round(colour.red / haveHit);
+        // colour.green = std::round(colour.green / haveHit);
+        // colour.blue = std::round(colour.blue / haveHit);
+
+        middle.intersectionColour = colour;
+        middle.intersectionBrightness = brightness;
+    } 
+
+    return middle;        
+}
+
+RayIntersection aliasRGSS(float x, float y, DrawingWindow window, Camera camera, OBJFile model)
+{
+    vector<Ray> rays;
+    float offset = 0.125f;
+    float w = 0.25f;
+
+    // Calculate ray
+    rays.push_back(calculateRay(x + 5*offset, y + 1*offset, window, camera));
+    rays.push_back(calculateRay(x + 1*offset, y + 3*offset, window, camera));
+    rays.push_back(calculateRay(x + 7*offset, y + 5*offset, window, camera));
+    rays.push_back(calculateRay(x + 3*offset, y + 7*offset, window, camera));
+
+    int haveHit = 0;
+    Colour colour = Colour(0,0,0);
+    float brightness = 0.0f;
+    RayIntersection middle;
+
+    for(int i=0; i<rays.size(); i++)
+    {
+        // Fire ray
+        Ray ray = rays[i];
+        RayIntersection intersection = fireRay(ray, camera, model);
+
+        if(i==0) 
+            middle = intersection; 
+
+        if(intersection.hasHit)
+        {
+            haveHit++;
 
             colour.red += w * intersection.intersectedTriangle.colour.red;
             colour.green += w * intersection.intersectedTriangle.colour.green;
