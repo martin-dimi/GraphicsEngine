@@ -24,6 +24,8 @@ void draw(World& world, DrawingWindow& window, bool showWireframe)
 
         drawUtilities::drawTriangle(canvasTriangle, !showWireframe, window, depthBuffer);
     }
+
+    delete [] depthBuffer;
 }
 }
 
