@@ -89,9 +89,9 @@ void OBJFile::readFaces(ifstream* file)
 
 void OBJFile::readVertex(string* words) 
 {
-    float x = stof(words[1]) * scale;
-    float y = stof(words[2]) * scale;
-    float z = stof(words[3]) * scale;
+    float x = stof(words[1]);
+    float y = stof(words[2]);
+    float z = stof(words[3]);
 
     if(x > this->max.x) this->max.x = x;
     if(y > this->max.y) this->max.y = y;
@@ -107,8 +107,8 @@ void OBJFile::readVertex(string* words)
 
 void OBJFile::readTextureVertex(string* words) 
 {
-    float x = stof(words[1]) * scale;
-    float y = stof(words[2]) * scale;
+    float x = stof(words[1]);
+    float y = stof(words[2]);
 
     glm::vec2 v = glm::vec2(x, y);
     this->textureVertecies.push_back(v);
@@ -189,9 +189,9 @@ void OBJFile::normaliseVertices()
 
         // Vertex[i].x=(Vertex[i].x-0.5*(A0.x+B0.x))*scale+0.5*(A.x+B.x)
 
-        v.x = (v.x-0.5f*(min.x + max.x)) * scale + 0.5f*(0);
-        v.y = (v.y-0.5f*(min.y + max.y)) * scale + 0.5f*(0);
-        v.z = (v.z-0.5f*(min.z + max.z)) * scale + 0.5f*(0);
+        v.x = (v.x-0.5f*(min.x + max.x)) * scale * this->scale;
+        v.y = (v.y-0.5f*(min.y + max.y)) * scale * this->scale;
+        v.z = (v.z-0.5f*(min.z + max.z)) * scale * this->scale;
 
         // v.x = 2 * (v.x - min.x) / (max.x - min.x) - 1;
         // v.y = 2 * (v.y - min.y) / (max.y - min.y) - 1;

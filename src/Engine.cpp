@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     state["displayMode"] = 0;
 
     world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
-    // world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 1.0f));
+    world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 0.5f));
 
     EventHandler handler = EventHandler(window, world, state);
 
