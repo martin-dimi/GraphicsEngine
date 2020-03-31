@@ -10,8 +10,6 @@
 #include "CanvasPoint.h"
 #include "ModelTriangle.h"
 #include "external/PPMImage.h"
-#include "model/Light.hpp"
-#include "model/Camera.hpp"
 
 using namespace std;
 
@@ -48,9 +46,5 @@ class OBJFile
         OBJFile(string pathObj);
         OBJFile(string pathObj, float scale);
         vector<ModelTriangle> faces;
-        vector<ModelTriangle> loadedFaces;
-        Light lightSource;
-
-        void transformToCameraSpace(Camera camera);
 };
 

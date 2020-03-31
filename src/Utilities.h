@@ -21,6 +21,4 @@ std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to, int steps
 
 CanvasPoint getTriangleMidPoint(CanvasTriangle triangle);
 CanvasTriangle convertToCanvasTriangle(ModelTriangle point, Camera camera, DrawingWindow window);
-
-RayIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles, int ignoreId);
 } // namespace utilities

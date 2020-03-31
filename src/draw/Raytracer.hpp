@@ -1,10 +1,9 @@
 #pragma once
 
-#include "external/OBJFile.h"
-#include "model/Camera.hpp"
+#include "model/World.hpp"
 #include <DrawingWindow.h>
 
 namespace raytracer
 {
-    void draw(OBJFile& model, Camera camera, DrawingWindow window);
+    void draw(World& world, DrawingWindow& window);
 }

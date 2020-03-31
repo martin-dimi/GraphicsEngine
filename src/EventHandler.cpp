@@ -1,6 +1,7 @@
 #include <glm/glm.hpp>
 #include <DrawingWindow.h>
 #include "model/Camera.hpp"
+#include "model/World.hpp"
 #include "draw/Drawer.hpp"
 #include "external/PPMImage.h"
 #include "external/OBJFile.h"
@@ -13,14 +14,13 @@ class EventHandler {
 
     private:
         DrawingWindow &window;
-        Camera &camera;
-        OBJFile &model;
+        World &world;
         SDL_Event event;
         
         unordered_map<string, int> *state;
 
     public:
-        EventHandler(DrawingWindow &window, Camera &camera, OBJFile &model) : window(window), camera(camera), model(model) 
+        EventHandler(DrawingWindow &window, World &world) : window(window), world(world)
         {
             this->event = SDL_Event();
         }
@@ -47,8 +47,8 @@ class EventHandler {
                 else if (event.key.keysym.sym == SDLK_a)        panCamera(-1);
                 else if (event.key.keysym.sym == SDLK_f)        
                 {
-                    camera.lookAt(vec3(0.0f, 0.0f, 0.0f));
-                    model.transformToCameraSpace(camera);
+                    world.camera.lookAt(vec3(0.0f, 0.0f, 0.0f));
+                    world.transformMeshToCameraSpace();
                 }
 
                 // OTHER
@@ -66,14 +66,14 @@ class EventHandler {
 
         void moveCamera(vec3 direction)
         {
-            camera.translate(direction, 0.1f);
-            model.transformToCameraSpace(camera);
+            world.camera.translate(direction, 0.1f);
+            world.transformMeshToCameraSpace();
         }
 
         void panCamera(int dir)
         {
-            camera.pan(3 * dir);
-            model.transformToCameraSpace(camera);
+            world.camera.pan(3 * dir);
+            world.transformMeshToCameraSpace();
         }
 
         void displayImage()
@@ -100,17 +100,17 @@ class EventHandler {
             if(mode == 0) 
             {
                 std::cout << "Switching to wireframe" << std::endl;
-                drawModelWireframe(model, camera, window);
+                drawModelWireframe(world, window);
             }
             else if(mode == 1) 
             {
                 std::cout << "Switching to rasterizing" << std::endl;
-                drawModel(model, camera, window, false);
+                drawModel(world, window, false);
             }
             else if(mode == 2)
             {
                 std::cout << "Switching to raytracing" << std::endl;
-                drawModel(model, camera, window, true);
+                drawModel(world, window, true);
             }
 
             (*state)["displayMode"] = mode;

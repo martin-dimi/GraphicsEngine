@@ -138,49 +138,6 @@ CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera, Drawi
     return CanvasTriangle(a, b, c, model.colour);
 }
 
-RayIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<ModelTriangle> triangles, int ignoreId)
-{
-    RayIntersection closestIntersection;
-
-    // Go through each triangle and check if the ray is intersecting
-    for (ModelTriangle triangle : triangles)
-    {
-        if(ignoreId == triangle.id) continue;
-        
-        glm::vec3 v0 = triangle.vertices[0] + camera.position;
-        glm::vec3 v1 = triangle.vertices[1] + camera.position;
-        glm::vec3 v2 = triangle.vertices[2] + camera.position;
-
-        vec3 e0 = v1 - v0;
-        vec3 e1 = v2 - v0;
-        vec3 SPVector = ray.getStart() - v0;
-        mat3 DEMatrix = mat3(-ray.getDirection(), e0, e1);
-
-        // [0] - the distance along the ray from the camera to the intersection point
-        // [1] - the proportion along the triangle's first edge that the intersection point appears
-        // [2] - the proportion along the triangle's second edge that the intersection point appears
-        vec3 solution = inverse(DEMatrix) * SPVector;
-        float distance = solution[0];
-        float u = solution[1];
-        float v = solution[2];
-
-        // verify there is an intersection
-        if (distance < 0 || u < 0 || v < 0 || v + u > 1)
-            continue;
-
-        if (closestIntersection.distance > distance)
-        {  
-            closestIntersection.hasHit = true;
-            closestIntersection.distance = distance;
-            closestIntersection.intersectionPoint = ray.getStart() + distance * ray.getDirection();
-            closestIntersection.intersectedTriangle = triangle;
-            closestIntersection.intersectionColour = Colour(triangle.colour);
-        }
-    }
-
-    return closestIntersection;
-}
-
 std::string printVec(glm::vec3 vec) {
         std::stringstream ss;
         ss << "X: " << vec.x << ", Y: " << vec.y << ", Z: " << vec.z << std::endl;  
