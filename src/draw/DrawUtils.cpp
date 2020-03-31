@@ -5,15 +5,15 @@
 #include <cmath>
 #include <vector>
 
-void drawTriangleOutline(CanvasTriangle triangle, DrawingWindow window);
-void drawTriangleFilled(CanvasTriangle triangle, DrawingWindow window, float *depthBuffer);
+void drawTriangleOutline(CanvasTriangle& triangle, DrawingWindow& window);
+void drawTriangleFilled(CanvasTriangle& triangle, DrawingWindow& window, float *depthBuffer);
 
-void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, Colour colour, DrawingWindow window, float *depthBuffer);
-void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, PPMImage image, DrawingWindow window);
+void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, Colour& colour, DrawingWindow& window, float *depthBuffer);
+void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, PPMImage image, DrawingWindow& window);
 
 namespace drawUtilities
 {
-    void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow window)
+    void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow& window)
     {
         int xDiff = b.x - a.x;
         int yDiff = b.y - a.y;
@@ -78,14 +78,14 @@ namespace drawUtilities
 
 // ////////////////////////////////////////////////
 // PRIVATE
-void drawTriangleOutline(CanvasTriangle triangle, DrawingWindow window)
+void drawTriangleOutline(CanvasTriangle& triangle, DrawingWindow& window)
 {
     drawUtilities::drawLine(triangle.vertices[0], triangle.vertices[1], triangle.colour, window);
     drawUtilities::drawLine(triangle.vertices[1], triangle.vertices[2], triangle.colour, window);
     drawUtilities::drawLine(triangle.vertices[2], triangle.vertices[0], triangle.colour, window);
 }
 
-void drawTriangleFilled(CanvasTriangle triangle, DrawingWindow window, float *depthBuffer)
+void drawTriangleFilled(CanvasTriangle& triangle, DrawingWindow& window, float *depthBuffer)
 {
     // Sort verticies
     std::sort(triangle.vertices, triangle.vertices + 3, [](CanvasPoint const &a, CanvasPoint const &b) -> bool { return a.y < b.y; });
@@ -96,12 +96,14 @@ void drawTriangleFilled(CanvasTriangle triangle, DrawingWindow window, float *de
     fillTriangle(triangle.vertices[2], midPoint, triangle.vertices[1], triangle.colour, window, depthBuffer);
 }
 
-void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, Colour colour, DrawingWindow window, float *depthBuffer)
+void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, Colour& colour, DrawingWindow& window, float *depthBuffer)
 {
     int height = std::ceil(abs(A.y - B.y) + 1);
 
-    std::vector<CanvasPoint> from = utilities::interpolate(A, B, height);
-    std::vector<CanvasPoint> to = utilities::interpolate(A, C, height);
+    std::vector<CanvasPoint> from;
+    std::vector<CanvasPoint> to;
+    utilities::interpolate(from, A, B, height);
+    utilities::interpolate(to, A, C, height);
 
     for (int row = 0; row < height; row++)
     {
@@ -114,7 +116,8 @@ void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, Colour colour, Dr
             continue;
 
         int width = std::ceil(toPoint.x - fromPoint.x + 1);
-        std::vector<CanvasPoint> line = utilities::interpolate(fromPoint, toPoint, width);
+        std::vector<CanvasPoint> line;
+        utilities::interpolate(line, fromPoint, toPoint, width);
 
         for (int col = 0; col < width; col++)
         {
@@ -139,11 +142,13 @@ void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, Colour colour, Dr
     }
 }
 
-void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, PPMImage image, DrawingWindow window)
+void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, PPMImage image, DrawingWindow& window)
 {
     int height = abs(A.y - B.y) + 1;
-    std::vector<CanvasPoint> from = utilities::interpolate(A, B, height);
-    std::vector<CanvasPoint> to = utilities::interpolate(A, C, height);
+    std::vector<CanvasPoint> from;
+    std::vector<CanvasPoint> to;
+    utilities::interpolate(from, A, B, height);
+    utilities::interpolate(to, A, C, height);
 
     bool reverseFlow = from[1].x > to[1].x;
 
@@ -153,7 +158,8 @@ void fillTriangle(CanvasPoint A, CanvasPoint B, CanvasPoint C, PPMImage image, D
         CanvasPoint toPoint = reverseFlow ? from[row] : to[row];
 
         int width = toPoint.x - fromPoint.x;
-        std::vector<CanvasPoint> line = utilities::interpolate(fromPoint, toPoint, width);
+        std::vector<CanvasPoint> line;
+        utilities::interpolate(line, fromPoint, toPoint, width);
 
         for (int xOffset = 1; xOffset < width; xOffset++)
         {

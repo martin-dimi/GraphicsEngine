@@ -16,9 +16,9 @@ void draw(World& world, DrawingWindow& window, bool showWireframe)
 
     for (ModelTriangle &modelTriangle : world.getMesh())
     {
-        if(modelTriangle.vertices[0].z > 0) continue;
-        if(modelTriangle.vertices[1].z > 0) continue;
-        if(modelTriangle.vertices[2].z > 0) continue;
+        if(modelTriangle.vertices[0].z > 0.0f) continue;
+        if(modelTriangle.vertices[1].z > 0.0f) continue;
+        if(modelTriangle.vertices[2].z > 0.0f) continue;
         
         CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTriangle, world.camera, window);
 

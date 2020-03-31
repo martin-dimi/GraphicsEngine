@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     state["displayMode"] = 0;
 
     world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
-    world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 0.5f));
+    // world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 0.5f));
 
     EventHandler handler = EventHandler(window, world, state);
 
@@ -63,6 +63,12 @@ void draw()
         drawModelWireframe(world, window);
     }
 
+    else if(state["displayMode"] == 1)
+    {
+        window.clearPixels();
+        drawModel(world, window, false);
+    }
+
     // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
     // drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
 }
@@ -73,7 +79,8 @@ void update()
     if (state["rotateAnimation"] == 0)
         return;
 
-    world.camera.translate(glm::vec3(1.0f, 0.0f, 0.0f), 0.3f);
+    // world.camera.translate(glm::vec3(1.0f, 0.0f, 0.0f), 0.3f);
+    world.camera.rotate(glm::vec3(0.0f, 0.0f, 0.0f), 3.5f);
     world.camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
     world.transformMeshToCameraSpace();
 }

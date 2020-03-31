@@ -1,7 +1,7 @@
 #include "Utilities.h"
 #include <sstream>
 
-CanvasPoint convertToCanvasPoint(glm::vec3 point, Camera camera, DrawingWindow window);
+CanvasPoint convertToCanvasPoint(glm::vec3& point, Camera& camera, DrawingWindow& window);
 
 namespace utilities
 {
@@ -59,12 +59,11 @@ std::vector<vec3> interpolate(glm::vec3 from, glm::vec3 to, int steps)
     return numbers;
 }
 
-std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to, int steps)
+void interpolate(std::vector<CanvasPoint>& points, CanvasPoint from, CanvasPoint to, int steps)
 {
-    std::vector<CanvasPoint> points;
 
     if (steps <= 0)
-        return points;
+        return;
 
     float xDiff = to.x - from.x;
     float yDiff = to.y - from.y;
@@ -73,12 +72,14 @@ std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to, int steps
     float xTexDiff = to.texturePoint.x - from.texturePoint.x;
     float yTexDiff = to.texturePoint.y - from.texturePoint.y;
 
-    float xStepSize = steps == 1 ? xDiff : xDiff / (steps - 1);
-    float yStepSize = steps == 1 ? yDiff : yDiff / (steps - 1);
-    float dStepSize = steps == 1 ? dDiff : dDiff / (steps - 1);
+    float divider = 1.0f / ( steps - 1 );
 
-    float xTexStepSize = steps == 1 ? xTexDiff : xTexDiff / (steps - 1);
-    float yTexStepSize = steps == 1 ? yTexDiff : yTexDiff / (steps - 1);
+    float xStepSize = steps == 1 ? xDiff : xDiff * divider;
+    float yStepSize = steps == 1 ? yDiff : yDiff * divider;
+    float dStepSize = steps == 1 ? dDiff : dDiff * divider;
+
+    float xTexStepSize = steps == 1 ? xTexDiff : xTexDiff * divider;
+    float yTexStepSize = steps == 1 ? yTexDiff : yTexDiff * divider;
 
     for (float step = 0; step < steps; step += 1)
     {
@@ -94,8 +95,6 @@ std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to, int steps
 
         points.push_back(cur);
     }
-
-    return points;
 }
 
 CanvasPoint getTriangleMidPoint(CanvasTriangle triangle)
@@ -112,8 +111,8 @@ CanvasPoint getTriangleMidPoint(CanvasTriangle triangle)
     float midPointY = triangle.vertices[0].y + midPointHeightDiff;
     float midPointDepth = triangle.vertices[0].depth + midPointDepthDiff;
 
-    TexturePoint a = triangle.vertices[0].texturePoint;
-    TexturePoint b = triangle.vertices[2].texturePoint;
+    TexturePoint& a = triangle.vertices[0].texturePoint;
+    TexturePoint& b = triangle.vertices[2].texturePoint;
 
     float texHeight = b.y - a.y;
     float texWidth = b.x - a.x;
@@ -144,7 +143,7 @@ std::string printVec(glm::vec3 vec) {
 
 } // namespace utilities
 
-CanvasPoint convertToCanvasPoint(glm::vec3 point, Camera camera, DrawingWindow window)
+CanvasPoint convertToCanvasPoint(glm::vec3& point, Camera& camera, DrawingWindow& window)
 {
     // Model space -> Camera space
     // glm::vec3 updated = (point - camera.position) * camera.orientation;

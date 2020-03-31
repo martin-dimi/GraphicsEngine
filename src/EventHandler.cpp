@@ -94,7 +94,7 @@ class EventHandler {
 
         void switchMode() 
         {
-            int mode = (state["displayMode"] + 1) % 3;    
+            int mode = (state["displayMode"] + 1) % 2;    
 
             window.clearPixels();
             if(mode == 0) 

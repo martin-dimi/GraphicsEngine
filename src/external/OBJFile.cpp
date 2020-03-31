@@ -187,23 +187,12 @@ void OBJFile::normaliseVertices()
     {
         glm::vec3 v = this->vertecies[i];
 
-        // Vertex[i].x=(Vertex[i].x-0.5*(A0.x+B0.x))*scale+0.5*(A.x+B.x)
-
         v.x = (v.x-0.5f*(min.x + max.x)) * scale * this->scale;
         v.y = (v.y-0.5f*(min.y + max.y)) * scale * this->scale;
         v.z = (v.z-0.5f*(min.z + max.z)) * scale * this->scale;
 
-        // v.x = 2 * (v.x - min.x) / (max.x - min.x) - 1;
-        // v.y = 2 * (v.y - min.y) / (max.y - min.y) - 1;
-        // v.z = 2 * (v.z - min.z) / (max.z - min.z) - 1;
-
         this->vertecies[i] = v;
     }
-
-    // for (glm::vec3 v : this->vertecies)
-    // {
-    //     std::cout << "X: " << v.x << ", Y: " << v.y << ", Z: " << v.z <<std::endl;
-    // }
 }
 
 void OBJFile::readPallet(string materialName)
