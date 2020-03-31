@@ -15,19 +15,19 @@ class EventHandler {
     private:
         DrawingWindow &window;
         World &world;
+        unordered_map<string, int> &state;
+
         SDL_Event event;
         
-        unordered_map<string, int> *state;
 
     public:
-        EventHandler(DrawingWindow &window, World &world) : window(window), world(world)
+        EventHandler(DrawingWindow &window, World &world, unordered_map<string, int> &state) : window(window), world(world), state(state)
         {
             this->event = SDL_Event();
         }
 
-        void listenForEvents(unordered_map<string, int> *state)
+        void listenForEvents()
         {
-            this->state = state;
             if (window.pollForInputEvents(&event))
                 handleEvent();
         }
@@ -89,12 +89,12 @@ class EventHandler {
 
         void triggerAnimation()
         {
-            (*state)["rotateAnimation"] = ((*state)["rotateAnimation"] + 1) % 2;
+            state["rotateAnimation"] = (state["rotateAnimation"] + 1) % 2;
         }
 
         void switchMode() 
         {
-            int mode = ((*state)["displayMode"] + 1) % 3;    
+            int mode = (state["displayMode"] + 1) % 3;    
 
             window.clearPixels();
             if(mode == 0) 
@@ -113,7 +113,7 @@ class EventHandler {
                 drawModel(world, window, true);
             }
 
-            (*state)["displayMode"] = mode;
+            state["displayMode"] = mode;
         }
 };
 

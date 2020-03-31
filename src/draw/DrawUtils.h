@@ -12,7 +12,7 @@
 namespace drawUtilities
 {
     void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow window);
-    void drawTriangle(CanvasTriangle triangle, bool isFilled, DrawingWindow window, float *depthBuffer);
+    void drawTriangle(CanvasTriangle& triangle, bool isFilled, DrawingWindow& window, float *depthBuffer);
     void drawTriangleTexture(CanvasTriangle triangle, PPMImage image, DrawingWindow window);
     void drawImage(PPMImage image, DrawingWindow window);
 }

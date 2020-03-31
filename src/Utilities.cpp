@@ -127,10 +127,8 @@ CanvasPoint getTriangleMidPoint(CanvasTriangle triangle)
     return midPoint;
 }
 
-CanvasTriangle convertToCanvasTriangle(ModelTriangle model, Camera camera, DrawingWindow window)
+CanvasTriangle convertToCanvasTriangle(ModelTriangle& model, Camera& camera, DrawingWindow& window)
 {
-    CanvasTriangle triangle = CanvasTriangle();
-
     CanvasPoint a = convertToCanvasPoint(model.vertices[0], camera, window);
     CanvasPoint b = convertToCanvasPoint(model.vertices[1], camera, window);
     CanvasPoint c = convertToCanvasPoint(model.vertices[2], camera, window);

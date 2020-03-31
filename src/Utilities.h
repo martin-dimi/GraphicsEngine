@@ -20,5 +20,5 @@ std::vector<vec3> interpolate(vec3 from, vec3 to, int steps);
 std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to, int steps);
 
 CanvasPoint getTriangleMidPoint(CanvasTriangle triangle);
-CanvasTriangle convertToCanvasTriangle(ModelTriangle point, Camera camera, DrawingWindow window);
+CanvasTriangle convertToCanvasTriangle(ModelTriangle& model, Camera& camera, DrawingWindow& window);
 } // namespace utilities

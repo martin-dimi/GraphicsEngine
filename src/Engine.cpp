@@ -40,13 +40,12 @@ int main(int argc, char *argv[])
     world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
     // world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 1.0f));
 
-    EventHandler handler = EventHandler(window, world);
+    EventHandler handler = EventHandler(window, world, state);
 
     while (true)
     {
         // We MUST poll for events - otherwise the window will freeze !
-
-        handler.listenForEvents(&state);
+        handler.listenForEvents();
         update();
         draw();
 

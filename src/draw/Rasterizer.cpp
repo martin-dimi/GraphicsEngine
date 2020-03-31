@@ -14,7 +14,7 @@ void draw(World& world, DrawingWindow& window, bool showWireframe)
     float *depthBuffer = new float[window.width * window.height];
     std::fill_n(depthBuffer, window.width * window.height, std::numeric_limits<float>::infinity());
 
-    for (ModelTriangle modelTriangle : world.getMesh())
+    for (ModelTriangle &modelTriangle : world.getMesh())
     {
         if(modelTriangle.vertices[0].z > 0) continue;
         if(modelTriangle.vertices[1].z > 0) continue;

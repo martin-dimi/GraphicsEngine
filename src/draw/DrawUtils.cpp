@@ -35,7 +35,7 @@ namespace drawUtilities
         }
     }
 
-    void drawTriangle(CanvasTriangle triangle, bool isFilled, DrawingWindow window, float *depthBuffer)
+    void drawTriangle(CanvasTriangle& triangle, bool isFilled, DrawingWindow& window, float *depthBuffer)
     {
         if (isFilled)
             drawTriangleFilled(triangle, window, depthBuffer);
