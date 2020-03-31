@@ -157,9 +157,10 @@ void OBJFile::readFace(string* words, Colour colour)
             return;
         }
 
-        triangle.texture[0] = vertecies[t1Index];
-        triangle.texture[1] = vertecies[t2Index];
-        triangle.texture[2] = vertecies[t3Index];
+        triangle.texture[0] = textureVertecies[t1Index];
+        triangle.texture[1] = textureVertecies[t2Index];
+        triangle.texture[2] = textureVertecies[t3Index];
+        triangle.isTextured = true;
     }
 
     faces.push_back(triangle);

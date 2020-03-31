@@ -4,11 +4,10 @@
 
 class Light {
 
-    private:
+    public:
         glm::vec3 location;
         float intensity;
 
-    public:
         Light()
         {
             
@@ -21,20 +20,5 @@ class Light {
             this->location.z = Z;
             this->intensity = intensity;
         }
-
-        glm::vec3 getLocation()
-        {
-            return this->location;
-        }
-
-        float getIntensity()
-        {
-            return this->intensity;
-        }
-
-        void setLocation(glm::vec3 location)
-        {
-            this->location = location;
-        }
-
+        
 };

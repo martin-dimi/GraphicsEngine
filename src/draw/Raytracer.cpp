@@ -5,17 +5,17 @@
 #include "Utilities.h"
 #include "external/OBJFile.h"
 
-void raytrace(int x, int y, DrawingWindow window, Camera camera, OBJFile model);
+void raytrace(int x, int y, DrawingWindow window, Camera camera, OBJFile& model);
 Ray calculateRay(float x, float y, DrawingWindow window, Camera camera);
-RayIntersection fireRay(Ray ray, Camera camera, OBJFile model);
-RayIntersection noAliasing(float x, float y, DrawingWindow window, Camera camera, OBJFile model);
-RayIntersection aliasQuincunx(float x, float y, DrawingWindow window, Camera camera, OBJFile model);
-RayIntersection aliasRGSS(float x, float y, DrawingWindow window, Camera camera, OBJFile model);
+RayIntersection fireRay(Ray ray, Camera camera, OBJFile& model);
+RayIntersection noAliasing(float x, float y, DrawingWindow window, Camera camera, OBJFile& model);
+RayIntersection aliasQuincunx(float x, float y, DrawingWindow window, Camera camera, OBJFile& model);
+RayIntersection aliasRGSS(float x, float y, DrawingWindow window, Camera camera, OBJFile& model);
 
 // PUBLIC
 namespace raytracer
 {
-void draw(OBJFile model, Camera camera, DrawingWindow window)
+void draw(OBJFile& model, Camera camera, DrawingWindow window)
 {
     for (int row = 0; row < window.height; row++)
         for (int col = 0; col < window.width; col++)
@@ -24,9 +24,10 @@ void draw(OBJFile model, Camera camera, DrawingWindow window)
 }
 
 // PRIVATE
-void raytrace(int x, int y, DrawingWindow window, Camera camera, OBJFile model)
+void raytrace(int x, int y, DrawingWindow window, Camera camera, OBJFile& model)
 {
-    RayIntersection intersection = noAliasing(x, y, window, camera, model);
+    // std::cout << "RayTracing X:" << x << ", Y: " << y << std::endl;
+    RayIntersection intersection = aliasRGSS(x, y, window, camera, model);
 
     if(intersection.hasHit)
         window.setPixelColour(x, y, intersection.intersectionColour.getPackedInt(intersection.intersectionBrightness));
@@ -34,20 +35,20 @@ void raytrace(int x, int y, DrawingWindow window, Camera camera, OBJFile model)
         window.setPixelColour(x, y, window.backgroundColour.getPackedInt());  
 }
 
-RayIntersection fireRay(Ray ray, Camera camera, OBJFile model)
+RayIntersection fireRay(Ray ray, Camera camera, OBJFile& model)
 {
     RayIntersection intersection = utilities::getClosestIntersection(camera, ray, model.loadedFaces, -1);
 
     // Calculate light if the ray has hit something
     if(intersection.hasHit)
     {
-        glm::vec3 light = (model.lightSource.getLocation() - camera.position) * camera.orientation + camera.position;
+        glm::vec3 light = (model.lightSource.location - camera.position) * camera.orientation + camera.position;
         glm::vec3 triangleNormal = intersection.intersectedTriangle.calculateNormal();
         glm::vec3 dirToLight     = glm::normalize(light - intersection.intersectionPoint);
 
         // Proximity lighting
         float distanceToLight = glm::distance(intersection.intersectionPoint, light);
-        float brightness = model.lightSource.getIntensity() / (4 * 3.14f * distanceToLight * distanceToLight);
+        float brightness = model.lightSource.intensity / (4 * 3.14f * distanceToLight * distanceToLight);
         if(brightness > 1.0) brightness = 1.0f;
 
         // Angle of incidence
@@ -70,7 +71,7 @@ RayIntersection fireRay(Ray ray, Camera camera, OBJFile model)
     return intersection;
 }
 
-RayIntersection noAliasing(float x, float y, DrawingWindow window, Camera camera, OBJFile model)
+RayIntersection noAliasing(float x, float y, DrawingWindow window, Camera camera, OBJFile& model)
 {
     // Calculate ray
     Ray ray = calculateRay(x + 0.5f, y + 0.5f, window, camera);
@@ -79,7 +80,7 @@ RayIntersection noAliasing(float x, float y, DrawingWindow window, Camera camera
     return fireRay(ray, camera, model);
 }
 
-RayIntersection aliasQuincunx(float x, float y, DrawingWindow window, Camera camera, OBJFile model)
+RayIntersection aliasQuincunx(float x, float y, DrawingWindow window, Camera camera, OBJFile& model)
 {
     vector<Ray> rays;
 
@@ -131,7 +132,7 @@ RayIntersection aliasQuincunx(float x, float y, DrawingWindow window, Camera cam
     return middle;        
 }
 
-RayIntersection aliasRGSS(float x, float y, DrawingWindow window, Camera camera, OBJFile model)
+RayIntersection aliasRGSS(float x, float y, DrawingWindow window, Camera camera, OBJFile& model)
 {
     vector<Ray> rays;
     float offset = 0.125f;

@@ -169,11 +169,11 @@ RayIntersection getClosestIntersection(Camera camera, Ray ray, std::vector<Model
             continue;
 
         if (closestIntersection.distance > distance)
-        {
+        {  
+            closestIntersection.hasHit = true;
             closestIntersection.distance = distance;
             closestIntersection.intersectionPoint = ray.getStart() + distance * ray.getDirection();
             closestIntersection.intersectedTriangle = triangle;
-            closestIntersection.hasHit = true;
             closestIntersection.intersectionColour = Colour(triangle.colour);
         }
     }

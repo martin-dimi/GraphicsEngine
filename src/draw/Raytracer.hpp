@@ -6,5 +6,5 @@
 
 namespace raytracer
 {
-    void draw(OBJFile model, Camera camera, DrawingWindow window);
+    void draw(OBJFile& model, Camera camera, DrawingWindow window);
 }

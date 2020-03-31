@@ -10,19 +10,22 @@ class ModelTriangle
   public:
     int id;
     vec3 vertices[3];
-    vec3 texture[3];
+    vec2 texture[3];
     Colour colour;
+    bool isTextured;
 
     ModelTriangle()
     {
+      isTextured = false;
     }
 
-    ModelTriangle(vec3 v0, vec3 v1, vec3 v2, Colour trigColour)
+    ModelTriangle(vec3 v0, vec3 v1, vec3 v2, Colour trigColour) : isTextured()
     {
       vertices[0] = v0;
       vertices[1] = v1;
       vertices[2] = v2;
       colour = trigColour;
+      isTextured = false;
     }
 
     vec3 calculateNormal()

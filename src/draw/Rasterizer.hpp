@@ -6,5 +6,5 @@
 
 namespace rasterizer
 {
-    void draw(OBJFile model, Camera camera, DrawingWindow window, bool isWireframe);
+    void draw(OBJFile& model, Camera camera, DrawingWindow window, bool isWireframe);
 }

@@ -13,12 +13,12 @@ void drawTriangle(CanvasTriangle triangle, bool isFilled, DrawingWindow window)
     drawUtilities::drawTriangle(triangle, isFilled, window, NULL);
 }
 
-void drawImage(PPMImage image, DrawingWindow window)
+void drawImage(PPMImage& image, DrawingWindow window)
 {
     drawUtilities::drawImage(image, window);
 }
 
-void drawModel(OBJFile model, Camera camera, DrawingWindow window, bool raytrace) 
+void drawModel(OBJFile& model, Camera camera, DrawingWindow window, bool raytrace) 
 {
     if(raytrace)
         raytracer::draw(model, camera, window);
@@ -26,7 +26,7 @@ void drawModel(OBJFile model, Camera camera, DrawingWindow window, bool raytrace
         rasterizer::draw(model, camera, window, false);
 }
 
-void drawModelWireframe(OBJFile model, Camera camera, DrawingWindow window)
+void drawModelWireframe(OBJFile& model, Camera camera, DrawingWindow window)
 {
     rasterizer::draw(model, camera, window, true);
 }

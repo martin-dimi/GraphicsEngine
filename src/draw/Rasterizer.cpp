@@ -7,7 +7,7 @@
 
 // PUBLIC
 namespace rasterizer {
-void draw(OBJFile model, Camera camera, DrawingWindow window, bool showWireframe) 
+void draw(OBJFile& model, Camera camera, DrawingWindow window, bool showWireframe) 
 {
      // Create a depth buffer
     float *depthBuffer = new float[window.width * window.height];
