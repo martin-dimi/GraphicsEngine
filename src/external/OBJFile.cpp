@@ -107,8 +107,8 @@ void OBJFile::readVertex(string* words)
 
 void OBJFile::readTextureVertex(string* words) 
 {
-    float x = stof(words[1]);
-    float y = stof(words[2]);
+    float x = stof(words[1]) * (texture.width-1);
+    float y = stof(words[2]) * (texture.height-1);
 
     glm::vec2 v = glm::vec2(x, y);
     this->textureVertecies.push_back(v);

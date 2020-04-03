@@ -10,7 +10,10 @@ void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow& window)
 
 void drawTriangle(CanvasTriangle triangle, bool isFilled, DrawingWindow& window)
 {
-    drawUtilities::drawTriangle(triangle, isFilled, window, NULL);
+    if(isFilled)
+        drawUtilities::drawTriangleFilled(triangle, window, NULL);
+    else
+        drawUtilities::drawTriangleOutline(triangle, window);
 }
 
 void drawImage(PPMImage& image, DrawingWindow& window)

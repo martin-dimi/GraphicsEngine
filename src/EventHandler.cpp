@@ -110,7 +110,7 @@ class EventHandler {
             else if(mode == 2)
             {
                 std::cout << "Switching to raytracing" << std::endl;
-                drawModel(world, window, true);
+                // drawModel(world, window, true);
             }
 
             state["displayMode"] = mode;

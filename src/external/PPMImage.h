@@ -7,6 +7,7 @@
 #include <vector>
 #include <Colour.h>
 #include <DrawingWindow.h>
+#include <TexturePoint.h>
 
 class PPMImage {
 
@@ -24,6 +25,7 @@ class PPMImage {
         PPMImage(std::string path);
         Colour getPixelValueAt(int index);
         Colour getPixelValueAt(int x, int y);
+        Colour getPixelValueAt(TexturePoint point);
 
         static void saveImage(std::string name, DrawingWindow &window);
 };

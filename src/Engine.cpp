@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
     state["rotateAnimation"] = 0;
     state["displayMode"] = 0;
 
-    world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
-    // world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 0.5f));
+    // world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
+    world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 1.0f));
 
     EventHandler handler = EventHandler(window, world, state);
 
@@ -56,21 +56,17 @@ int main(int argc, char *argv[])
 
 void draw()
 {
-    // drawModel(world, window, true);
     if(state["displayMode"] == 0)
     {
         window.clearPixels();
         drawModelWireframe(world, window);
-    }
-
+    } 
+    
     else if(state["displayMode"] == 1)
     {
         window.clearPixels();
         drawModel(world, window, false);
     }
-
-    // drawLine(CanvasPoint(0, HEIGHT/2), CanvasPoint(WIDTH-1, HEIGHT/2), Colour(255, 255, 0), window);
-    // drawLine(CanvasPoint(WIDTH/2, 0), CanvasPoint(WIDTH/2, HEIGHT-1), Colour(255, 255, 0), window);
 }
 
 void update()

@@ -4,6 +4,7 @@
 #include "model/Light.hpp"
 #include "model/Camera.hpp"
 #include "external/OBJFile.h"
+#include "external/PPMImage.h"
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -28,6 +29,7 @@ class World
     public:
         Camera& camera;
         Light& light;
+        PPMImage texture;
 
         World(Camera& c, Light& l) : camera(c), light(l) { }
 
@@ -37,6 +39,7 @@ class World
                 this->mesh.push_back(triangle);
                 this->meshWithCameraPrespective.push_back(transformToCameraSpace(triangle));
             }
+            this->texture = obj.texture;
         }
         
         void transformMeshToCameraSpace()

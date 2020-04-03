@@ -9,11 +9,8 @@ std::vector<float> interpolate(float from, float to, int steps)
 {
     std::vector<float> numbers;
 
-    if (steps - 1 == 0)
-        return numbers;
-
     float diff = to - from;
-    float increment = diff / (steps - 1);
+    float increment = steps == 1 ? diff : diff / (steps - 1);
 
     for (float step = 0; step < steps; step += 1)
         numbers.push_back(from + step * increment);
@@ -61,7 +58,6 @@ std::vector<vec3> interpolate(glm::vec3 from, glm::vec3 to, int steps)
 
 void interpolate(std::vector<CanvasPoint>& points, CanvasPoint from, CanvasPoint to, int steps)
 {
-
     if (steps <= 0)
         return;
 
@@ -72,16 +68,16 @@ void interpolate(std::vector<CanvasPoint>& points, CanvasPoint from, CanvasPoint
     float xTexDiff = to.texturePoint.x - from.texturePoint.x;
     float yTexDiff = to.texturePoint.y - from.texturePoint.y;
 
-    float divider = 1.0f / ( steps - 1 );
+    float divider = steps == 1 ? 1.0f : 1.0f / ( steps - 1 );
 
-    float xStepSize = steps == 1 ? xDiff : xDiff * divider;
-    float yStepSize = steps == 1 ? yDiff : yDiff * divider;
-    float dStepSize = steps == 1 ? dDiff : dDiff * divider;
+    float xStepSize = xDiff * divider;
+    float yStepSize = yDiff * divider;
+    float dStepSize = dDiff * divider;
 
-    float xTexStepSize = steps == 1 ? xTexDiff : xTexDiff * divider;
-    float yTexStepSize = steps == 1 ? yTexDiff : yTexDiff * divider;
+    float xTexStepSize = xTexDiff * divider;
+    float yTexStepSize = yTexDiff * divider;
 
-    for (float step = 0; step < steps; step += 1)
+    for (float step = 0; step < steps; step++)
     {
         float curX = from.x + step * xStepSize;
         float curY = from.y + step * yStepSize;
@@ -132,6 +128,10 @@ CanvasTriangle convertToCanvasTriangle(ModelTriangle& model, Camera& camera, Dra
     CanvasPoint b = convertToCanvasPoint(model.vertices[1], camera, window);
     CanvasPoint c = convertToCanvasPoint(model.vertices[2], camera, window);
 
+    a.texturePoint = TexturePoint(model.texture[0]);
+    b.texturePoint = TexturePoint(model.texture[1]);
+    c.texturePoint = TexturePoint(model.texture[2]);
+
     return CanvasTriangle(a, b, c, model.colour);
 }
 
@@ -146,9 +146,7 @@ std::string printVec(glm::vec3 vec) {
 CanvasPoint convertToCanvasPoint(glm::vec3& point, Camera& camera, DrawingWindow& window)
 {
     // Model space -> Camera space
-    // glm::vec3 updated = (point - camera.position) * camera.orientation;
     // glm::vec3 updated = (point - camera.position) * camera.orientation + camera.position;
-
 
     // Camera space -> Canvas Space
     float canvasX = window.scale * (camera.f *  point.x) / (-point.z) + window.width / 2.0f;

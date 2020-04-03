@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <glm/glm.hpp>
 
 class TexturePoint
 {
@@ -15,6 +16,12 @@ class TexturePoint
     {
       x = xPos;
       y = yPos;
+    }
+
+    TexturePoint(glm::vec2 point)
+    {
+      x = point.x;
+      y = point.y;
     }
 
     void print()

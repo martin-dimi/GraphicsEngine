@@ -32,6 +32,11 @@ Colour PPMImage::getPixelValueAt(int index)
     return this->payload[index];
 }
 
+Colour PPMImage::getPixelValueAt(TexturePoint point) 
+{
+    return getPixelValueAt(point.x, point.y);
+}
+
 Colour PPMImage::getPixelValueAt(int x, int y) 
 {
     if(x > width || x < 0 || y > height || y < 0) 

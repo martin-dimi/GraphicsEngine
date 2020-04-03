@@ -11,10 +11,9 @@
 
 namespace drawUtilities
 {
-    void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow& window);
-    void drawTriangle(CanvasTriangle& triangle, bool isFilled, DrawingWindow& window, float *depthBuffer);
-    void drawTriangleTexture(CanvasTriangle triangle, PPMImage image, DrawingWindow window);
     void drawImage(PPMImage image, DrawingWindow window);
+    void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow& window);
+    void drawTriangleOutline(CanvasTriangle& triangle, DrawingWindow& window);
+    void drawTriangleFilled(CanvasTriangle& triangle, DrawingWindow& window, float *depthBuffer);
+    void drawTriangleTextured(CanvasTriangle& triangle, PPMImage& image, DrawingWindow& window, float *depthBuffer);
 }
-
-

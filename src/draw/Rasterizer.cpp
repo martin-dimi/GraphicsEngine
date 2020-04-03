@@ -6,6 +6,7 @@
 #include "DrawUtils.h"
 
 
+
 // PUBLIC
 namespace rasterizer {
 void draw(World& world, DrawingWindow& window, bool showWireframe) 
@@ -22,11 +23,14 @@ void draw(World& world, DrawingWindow& window, bool showWireframe)
         
         CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTriangle, world.camera, window);
 
-        drawUtilities::drawTriangle(canvasTriangle, !showWireframe, window, depthBuffer);
+        if (showWireframe)
+            drawUtilities::drawTriangleOutline(canvasTriangle, window);
+        else if (modelTriangle.isTextured)
+            drawUtilities::drawTriangleTextured(canvasTriangle, world.texture, window, depthBuffer);
+        else
+            drawUtilities::drawTriangleFilled(canvasTriangle, window, depthBuffer);
     }
 
     delete [] depthBuffer;
 }
 }
-
-
