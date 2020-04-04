@@ -8,6 +8,7 @@ class CanvasPoint
     float x;
     float y;
     double depth;
+    float initDepth;
     float brightness;
     
     TexturePoint texturePoint;

@@ -152,6 +152,7 @@ CanvasPoint convertToCanvasPoint(glm::vec3& point, Camera& camera, DrawingWindow
     float canvasX = window.scale * (camera.f *  point.x) / (-point.z) + window.width / 2.0f;
     float canvasY = window.scale * (camera.f * -point.y) / (-point.z) + window.height / 2.0f;
     float canvasD = 1.0f / point.z;
-
-    return CanvasPoint(canvasX, canvasY, canvasD);
+    CanvasPoint p = CanvasPoint(canvasX, canvasY, canvasD);
+    p.initDepth = point.z;
+    return p;
 }

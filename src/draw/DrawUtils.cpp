@@ -7,6 +7,7 @@
 
 void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, Colour& colour, DrawingWindow& window, float *depthBuffer);
 void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, PPMImage& image, DrawingWindow& window, float *depthBuffer);
+float perspectiveCorrelation(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, int q);
 
 namespace drawUtilities
 {
@@ -139,6 +140,8 @@ void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, PPMImage& imag
         if (y < 0 || y >= window.height - 1)
             continue;
 
+        // float ty = perspectiveCorrelation(A, B, C, row);
+
         int width = std::ceil(toPoint.x - fromPoint.x + 1);
         std::vector<CanvasPoint> line;
         utilities::interpolate(line, fromPoint, toPoint, width);
@@ -151,7 +154,7 @@ void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, PPMImage& imag
             if (x < 0 || x >= window.width - 1)
                 continue;
 
-            Colour colour = image.getPixelValueAt(p.texturePoint);
+            Colour colour = image.getPixelValueAt(p.texturePoint.x, p.texturePoint.y);
 
             if (depthBuffer != NULL)
             {
@@ -166,4 +169,21 @@ void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, PPMImage& imag
                 window.setPixelColour(x, y, colour.getPackedInt());
         }
     }
+}
+
+float perspectiveCorrelation(CanvasPoint& a, CanvasPoint& b, CanvasPoint& c, int q) 
+{
+    CanvasPoint points[] = {a, b, c};
+    std::sort(points, points + 3, [](CanvasPoint const &a, CanvasPoint const &b) -> bool { return a.initDepth < b.initDepth; });
+
+    float Z0 = points[0].initDepth;
+    float Z1 = points[2].initDepth;
+    float C0 = points[0].texturePoint.y;
+    float C1 = points[2].texturePoint.y;
+
+    float upper = (C0/Z0)*(1-q) + (C1/Z1)*q;
+    float lower = (1.0f/Z0)*(1-q) + (1.0f/Z1)*q;
+    float C = upper / lower;
+
+    return C;
 }

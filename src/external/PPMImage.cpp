@@ -41,7 +41,7 @@ Colour PPMImage::getPixelValueAt(int x, int y)
 {
     if(x > width || x < 0 || y > height || y < 0) 
     {
-        std::cout << "Requested image pixel out of scope" << std::endl;
+        std::cout << "Requested image pixel out of scope: " << x << ", " << y << std::endl;
         return Colour(0,0,0);
     }
 
