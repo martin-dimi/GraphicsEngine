@@ -94,7 +94,7 @@ class EventHandler {
 
         void switchMode() 
         {
-            int mode = (state["displayMode"] + 1) % 2;    
+            int mode = (state["displayMode"] + 1) % 3;    
 
             window.clearPixels();
             if(mode == 0) 
@@ -110,7 +110,7 @@ class EventHandler {
             else if(mode == 2)
             {
                 std::cout << "Switching to raytracing" << std::endl;
-                // drawModel(world, window, true);
+                drawModel(world, window, true);
             }
 
             state["displayMode"] = mode;

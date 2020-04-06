@@ -2,13 +2,15 @@
 #include "Utils.h"
 
 OBJFile::OBJFile() {}
-OBJFile::OBJFile(string pathObj) :OBJFile::OBJFile(pathObj, 1.0f) {}
-OBJFile::OBJFile(string pathObj, float scale)
+OBJFile::OBJFile(string pathObj) : OBJFile::OBJFile(pathObj, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f)) {}
+OBJFile::OBJFile(string pathObj, float scale) : OBJFile::OBJFile(pathObj, scale, glm::vec3(0.0f, 0.0f, 0.0f)){}
+OBJFile::OBJFile(string pathObj, float scale, glm::vec3 position)
 {
     unsigned found = pathObj.find_last_of("/");
     this->path = pathObj.substr(0 , found) + "/";
     this->objName = pathObj.substr(found + 1);
 
+    this->position = position;
     this->scale = scale;
     this->max = glm::vec3(-1000.0f, -1000.0f, -1000.0f);
     this->min = glm::vec3(1000.0f, 1000.0f, 1000.0f);
@@ -191,7 +193,7 @@ void OBJFile::normaliseVertices()
         v.y = (v.y-0.5f*(min.y + max.y)) * scale * this->scale;
         v.z = (v.z-0.5f*(min.z + max.z)) * scale * this->scale;
 
-        this->vertecies[i] = v;
+        this->vertecies[i] = v + this->position;
     }
 }
 

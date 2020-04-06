@@ -23,6 +23,7 @@ class OBJFile
         vector<glm::vec2> textureVertecies;
 
         float scale;
+        glm::vec3 position;
         glm::vec3 max;
         glm::vec3 min;
 
@@ -44,6 +45,7 @@ class OBJFile
         OBJFile();
         OBJFile(string pathObj);
         OBJFile(string pathObj, float scale);
+        OBJFile(string pathObj, float scale, glm::vec3 position);
         vector<ModelTriangle> faces;
         PPMImage texture;
 };

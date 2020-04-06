@@ -8,7 +8,7 @@
 void raytrace(int x, int y, DrawingWindow& window, World& world);
 Ray calculateRay(float x, float y, DrawingWindow& window, Camera& camera);
 RayIntersection fireRay(Ray& ray, World& world);
-RayIntersection getClosestIntersection(Camera& camera, Ray& ray, std::vector<ModelTriangle>& triangles, int ignoreId);
+RayIntersection getClosestIntersection(Camera& camera, Ray& ray, World& world, int ignoreId);
 RayIntersection noAliasing(float x, float y, DrawingWindow& window, World& world);
 RayIntersection aliasQuincunx(float x, float y, DrawingWindow& window, World& world);
 RayIntersection aliasRGSS(float x, float y, DrawingWindow& window, World& world);
@@ -18,9 +18,14 @@ namespace raytracer
 {
 void draw(World& world, DrawingWindow& window)
 {
-    for (int row = 0; row < window.height; row++)
+    for (int row = 0; row < window.height; row++) 
+    {
+        std::cout << "Raytracing row: " << row << std::endl;
         for (int col = 0; col < window.width; col++)
             raytrace(col, row, window, world);
+    }
+    std::cout << "Raytracing finished." << std::endl;
+
 }
 }
 
@@ -28,7 +33,8 @@ void draw(World& world, DrawingWindow& window)
 void raytrace(int x, int y, DrawingWindow& window, World& world)
 {
     // std::cout << "RayTracing X:" << x << ", Y: " << y << std::endl;
-    RayIntersection intersection = aliasRGSS(x, y, window, world);
+    // RayIntersection intersection = aliasRGSS(x, y, window, world);
+    RayIntersection intersection = noAliasing(x, y, window, world);
 
     if(intersection.hasHit)
         window.setPixelColour(x, y, intersection.intersectionColour.getPackedInt(intersection.intersectionBrightness));
@@ -38,7 +44,7 @@ void raytrace(int x, int y, DrawingWindow& window, World& world)
 
 RayIntersection fireRay(Ray& ray, World& world)
 {
-    RayIntersection intersection = getClosestIntersection(world.camera, ray, world.getMesh(), -1);
+    RayIntersection intersection = getClosestIntersection(world.camera, ray, world, -1);
 
     // Calculate light if the ray has hit something
     if(intersection.hasHit)
@@ -61,7 +67,7 @@ RayIntersection fireRay(Ray& ray, World& world)
 
         // Shadows
         Ray shadowRay = Ray(intersection.intersectionPoint, dirToLight);
-        RayIntersection shadowIntersection = getClosestIntersection(world.camera, shadowRay, world.getMesh(), intersection.intersectedTriangle.id);
+        RayIntersection shadowIntersection = getClosestIntersection(world.camera, shadowRay, world, intersection.intersectedTriangle.id);
         float distanceToIntersection = glm::distance(intersection.intersectionPoint, shadowIntersection.intersectionPoint);
         if(shadowIntersection.hasHit && distanceToIntersection <= distanceToLight) 
             brightness = 0.2f;
@@ -72,12 +78,12 @@ RayIntersection fireRay(Ray& ray, World& world)
     return intersection;
 }
 
-RayIntersection getClosestIntersection(Camera& camera, Ray& ray, std::vector<ModelTriangle>& triangles, int ignoreId)
+RayIntersection getClosestIntersection(Camera& camera, Ray& ray, World& world, int ignoreId)
 {
     RayIntersection closestIntersection;
 
     // Go through each triangle and check if the ray is intersecting
-    for (ModelTriangle triangle : triangles)
+    for (ModelTriangle triangle : world.getMesh())
     {
         if(ignoreId == triangle.id) continue;
         
@@ -107,8 +113,30 @@ RayIntersection getClosestIntersection(Camera& camera, Ray& ray, std::vector<Mod
             closestIntersection.hasHit = true;
             closestIntersection.distance = distance;
             closestIntersection.intersectionPoint = ray.getStart() + distance * ray.getDirection();
+            // closestIntersection.intersectionPoint = v0 + e0 * u + e1*v;
+
             closestIntersection.intersectedTriangle = triangle;
-            closestIntersection.intersectionColour = Colour(triangle.colour);
+
+            if(triangle.isTextured)
+            {
+                vec2 te0 = triangle.texture[1] - triangle.texture[0];
+                vec2 te1 = triangle.texture[2] - triangle.texture[0];
+                vec2 textureIntersection = triangle.texture[0] + (te0 * u) + (te1 * v);
+
+                std::cout << "t0: " << triangle.texture[0].x << ", " << triangle.texture[0].y << std::endl;
+                std::cout << "t1: " << triangle.texture[1].x << ", " << triangle.texture[1].y << std::endl;
+                std::cout << "t2: " << triangle.texture[2].x << ", " << triangle.texture[2].y << std::endl;
+                std::cout << "u: " << u << ", v: " << v << std::endl;
+
+                std::cout << "Texture value: " << textureIntersection.x << ", " << textureIntersection.y << std::endl;
+
+                Colour texture = world.texture.getPixelValueAt(textureIntersection);
+                closestIntersection.intersectionColour = texture;
+            }
+            else 
+            {
+                closestIntersection.intersectionColour = Colour(triangle.colour);
+            }
         }
     }
 

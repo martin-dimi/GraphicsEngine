@@ -7,7 +7,7 @@
 
 void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, Colour& colour, DrawingWindow& window, float *depthBuffer);
 void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, PPMImage& image, DrawingWindow& window, float *depthBuffer);
-float perspectiveCorrelation(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, int q);
+float perspectiveCorrelation(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, float q);
 
 namespace drawUtilities
 {
@@ -140,7 +140,7 @@ void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, PPMImage& imag
         if (y < 0 || y >= window.height - 1)
             continue;
 
-        // float ty = perspectiveCorrelation(A, B, C, row);
+        float ty = perspectiveCorrelation(A, B, C, (float) row/height);
 
         int width = std::ceil(toPoint.x - fromPoint.x + 1);
         std::vector<CanvasPoint> line;
@@ -154,7 +154,7 @@ void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, PPMImage& imag
             if (x < 0 || x >= window.width - 1)
                 continue;
 
-            Colour colour = image.getPixelValueAt(p.texturePoint.x, p.texturePoint.y);
+            Colour colour = image.getPixelValueAt(p.texturePoint.x, ty);
 
             if (depthBuffer != NULL)
             {
@@ -171,13 +171,13 @@ void fillTriangle(CanvasPoint& A, CanvasPoint& B, CanvasPoint& C, PPMImage& imag
     }
 }
 
-float perspectiveCorrelation(CanvasPoint& a, CanvasPoint& b, CanvasPoint& c, int q) 
+float perspectiveCorrelation(CanvasPoint& a, CanvasPoint& b, CanvasPoint& c, float q) 
 {
     CanvasPoint points[] = {a, b, c};
-    std::sort(points, points + 3, [](CanvasPoint const &a, CanvasPoint const &b) -> bool { return a.initDepth < b.initDepth; });
+    std::sort(points, points + 3, [](CanvasPoint const &a, CanvasPoint const &b) -> bool { return a.initDepth > b.initDepth; });
 
-    float Z0 = points[0].initDepth;
-    float Z1 = points[2].initDepth;
+    float Z0 = points[0].depth;
+    float Z1 = points[2].depth;
     float C0 = points[0].texturePoint.y;
     float C1 = points[2].texturePoint.y;
 
