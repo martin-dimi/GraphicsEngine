@@ -22,14 +22,18 @@ void draw(World& world, DrawingWindow& window, bool showWireframe)
         if(modelTriangle.vertices[2].z > 0.0f) continue;
         
         CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(modelTriangle, world.camera, window);
-
         if (showWireframe)
             drawUtilities::drawTriangleOutline(canvasTriangle, window);
         else if (modelTriangle.isTextured)
             drawUtilities::drawTriangleTextured(canvasTriangle, world.texture, window, depthBuffer);
         else
             drawUtilities::drawTriangleFilled(canvasTriangle, window, depthBuffer);
+
+        // break;
     }
+
+    // CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(world.getMesh()[1], world.camera, window);
+    // drawUtilities::drawPoint(canvasTriangle.vertices[1], window, Colour(255, 255, 0));
 
     delete [] depthBuffer;
 }

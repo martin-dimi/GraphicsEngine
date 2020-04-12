@@ -42,6 +42,11 @@ Colour PPMImage::getPixelValueAt(glm::vec2 point)
     return getPixelValueAt(point.x, point.y);
 }
 
+Colour PPMImage::getPixelValueAt(float x, float y) 
+{
+    return getPixelValueAt((int) round(x), (int) round(y));
+}
+
 Colour PPMImage::getPixelValueAt(int x, int y) 
 {
     if(x > width || x < 0 || y > height || y < 0) 

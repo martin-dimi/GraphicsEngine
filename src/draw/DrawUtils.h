@@ -11,6 +11,7 @@
 
 namespace drawUtilities
 {
+    void drawPoint(CanvasPoint& point, DrawingWindow& window, Colour c);
     void drawImage(PPMImage image, DrawingWindow window);
     void drawLine(CanvasPoint a, CanvasPoint b, Colour c, DrawingWindow& window);
     void drawTriangleOutline(CanvasTriangle& triangle, DrawingWindow& window);

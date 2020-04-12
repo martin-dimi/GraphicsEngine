@@ -21,7 +21,7 @@ void update();
 const int WIDTH = 600;
 const int HEIGHT = 400;
 
-Camera camera = Camera(0.0f, 0.0f, 3.0f, 1.0f);
+Camera camera = Camera(0.0f, 0.0f, 3.0f, 1.2f);
 Light light = Light(0.0f, 0.9f, 0.0f, 40.0f);
 World world = World(camera, light);
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     // world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
     world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 1.0f, vec3(0.0f, 0.0f, -0.5f)));
-    // world.addMesh(OBJFile("assets/Checkerboard/checkerboard.obj", 1.0f, vec3(0.0f, 0.4f, 0.0f)));
+    // world.addMesh(OBJFile("assets/Checkerboard/checkerboard.obj", 1.0f, vec3(0.0f, -0.4f, 0.0f)));
 
     EventHandler handler = EventHandler(window, world, state);
 
@@ -77,7 +77,7 @@ void update()
         return;
 
     // world.camera.translate(glm::vec3(1.0f, 0.0f, 0.0f), 0.3f);
-    world.camera.rotate(glm::vec3(0.0f, 0.0f, 0.0f), 3.5f);
+    world.camera.rotate(glm::vec3(0.0f, 0.0f, 0.0f), 1.5f);
     world.camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
     world.transformMeshToCameraSpace();
 }

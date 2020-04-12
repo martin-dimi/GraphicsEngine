@@ -25,6 +25,7 @@ class PPMImage {
         PPMImage(std::string path);
         Colour getPixelValueAt(int index);
         Colour getPixelValueAt(int x, int y);
+        Colour getPixelValueAt(float x, float y);
         Colour getPixelValueAt(TexturePoint point);
         Colour getPixelValueAt(glm::vec2 point);
 

@@ -51,6 +51,6 @@ class CanvasPoint
 
 inline std::ostream& operator<<(std::ostream& os, const CanvasPoint& point)
 {
-    os << "(" << point.x << ", " << point.y << ", " << point.depth << ") " << point.brightness << std::endl;
+    os << "(" << point.x << ", " << point.y << ", " << point.initDepth << ") " << point.brightness << point.texturePoint << std::endl;
     return os;
 }

@@ -123,13 +123,6 @@ RayIntersection getClosestIntersection(Camera& camera, Ray& ray, World& world, i
                 vec2 te1 = triangle.texture[2] - triangle.texture[0];
                 vec2 textureIntersection = triangle.texture[0] + (te0 * u) + (te1 * v);
 
-                std::cout << "t0: " << triangle.texture[0].x << ", " << triangle.texture[0].y << std::endl;
-                std::cout << "t1: " << triangle.texture[1].x << ", " << triangle.texture[1].y << std::endl;
-                std::cout << "t2: " << triangle.texture[2].x << ", " << triangle.texture[2].y << std::endl;
-                std::cout << "u: " << u << ", v: " << v << std::endl;
-
-                std::cout << "Texture value: " << textureIntersection.x << ", " << textureIntersection.y << std::endl;
-
                 Colour texture = world.texture.getPixelValueAt(textureIntersection);
                 closestIntersection.intersectionColour = texture;
             }
