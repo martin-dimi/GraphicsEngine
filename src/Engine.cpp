@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     state["displayMode"] = 0;
 
     // Sphere sphere = Sphere(15, 15, vec3(0.0f, 0.0f, 0.0f), 1, Colour(230, 70, 160));
-    Sphere sphere = Sphere(7, 7, vec3(0.31f, -0.09f, 0.4f), 0.3f, Colour(255, 255, 255));
+    Sphere sphere = Sphere(12, 12, vec3(0.31f, -0.09f, 0.4f), 0.3f, Colour(180, 70, 160));
     world.addMesh(sphere.mesh);
     // world.addMesh(OBJFile("assets/Panter/panter2.obj", 1.0f));
     world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
