@@ -43,6 +43,7 @@ class EventHandler {
                 else if (event.key.keysym.sym == SDLK_DOWN)     moveCamera(vec3( 0, -1,  0));
                 else if (event.key.keysym.sym == SDLK_w)        moveCamera(vec3( 0,  0, -1));
                 else if (event.key.keysym.sym == SDLK_s)        moveCamera(vec3( 0,  0,  1));
+                else if (event.key.keysym.sym == SDLK_r)        resetCamera();
                 else if (event.key.keysym.sym == SDLK_d)        panCamera(1);
                 else if (event.key.keysym.sym == SDLK_a)        panCamera(-1);
                 else if (event.key.keysym.sym == SDLK_f)        
@@ -67,6 +68,15 @@ class EventHandler {
         void moveCamera(vec3 direction)
         {
             world.camera.translate(direction, 0.1f);
+            world.transformMeshToCameraSpace();
+        }
+
+        void resetCamera()
+        {
+            world.camera.position.x = 0.0f;
+            world.camera.position.y = 0.0f;
+            world.camera.position.z = 3.0f;
+            world.camera.orientation = glm::mat3(1.0f);
             world.transformMeshToCameraSpace();
         }
 

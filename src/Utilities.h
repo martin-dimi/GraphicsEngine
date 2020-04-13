@@ -21,4 +21,5 @@ void interpolate(std::vector<CanvasPoint>& points, CanvasPoint from, CanvasPoint
 
 CanvasPoint getTriangleMidPoint(CanvasTriangle triangle);
 CanvasTriangle convertToCanvasTriangle(ModelTriangle& model, Camera& camera, DrawingWindow& window);
+CanvasPoint convertToCanvasPoint(glm::vec3& point, Camera& camera, DrawingWindow& window);
 } // namespace utilities

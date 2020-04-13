@@ -137,6 +137,16 @@ CanvasTriangle convertToCanvasTriangle(ModelTriangle& model, Camera& camera, Dra
     return CanvasTriangle(a, b, c, model.colour);
 }
 
+CanvasPoint convertToCanvasPoint(glm::vec3& point, Camera& camera, DrawingWindow& window)
+{
+    // float z = point.z == 0 ? 1.0f : 1.0f / (-point.z);
+    vec3 p = (point - camera.position) * camera.orientation;
+    float canvasX = window.scale * (camera.f *  p.x) / (-p.z) + window.halfWidth;
+    float canvasY = window.scale * (camera.f * -p.y) / (-p.z) + window.halfHeight;
+
+    return CanvasPoint(canvasX, canvasY, 0);
+}
+
 std::string printVec(glm::vec3 vec) {
         std::stringstream ss;
         ss << "X: " << vec.x << ", Y: " << vec.y << ", Z: " << vec.z << std::endl;  

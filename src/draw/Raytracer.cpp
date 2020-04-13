@@ -50,8 +50,8 @@ RayIntersection fireRay(Ray& ray, World& world)
     if(intersection.hasHit)
     {
         glm::vec3 light = (world.light.location - world.camera.position) * world.camera.orientation + world.camera.position;
-        glm::vec3 triangleNormal = intersection.intersectedTriangle.calculateNormal();
-        glm::vec3 dirToLight     = glm::normalize(light - intersection.intersectionPoint);
+        glm::vec3 triangleNormal = intersection.intersectionNormal;
+        glm::vec3 dirToLight = glm::normalize(light - intersection.intersectionPoint);
 
         // Proximity lighting
         float distanceToLight = glm::distance(intersection.intersectionPoint, light);
@@ -81,6 +81,7 @@ RayIntersection fireRay(Ray& ray, World& world)
 RayIntersection getClosestIntersection(Camera& camera, Ray& ray, World& world, int ignoreId)
 {
     RayIntersection closestIntersection;
+    float intU, intV;
 
     // Go through each triangle and check if the ray is intersecting
     for (ModelTriangle triangle : world.getMesh())
@@ -113,9 +114,10 @@ RayIntersection getClosestIntersection(Camera& camera, Ray& ray, World& world, i
             closestIntersection.hasHit = true;
             closestIntersection.distance = distance;
             closestIntersection.intersectionPoint = ray.getStart() + distance * ray.getDirection();
-            // closestIntersection.intersectionPoint = v0 + e0 * u + e1*v;
-
             closestIntersection.intersectedTriangle = triangle;
+
+            intU = u;
+            intV = v;
 
             if(triangle.isTextured)
             {
@@ -132,6 +134,21 @@ RayIntersection getClosestIntersection(Camera& camera, Ray& ray, World& world, i
             }
         }
     }
+
+    if(closestIntersection.hasHit) 
+    {
+        ModelTriangle &triangle = closestIntersection.intersectedTriangle;
+        // Calculate normals
+        if(triangle.hasNormals)
+        {
+            closestIntersection.intersectionNormal = triangle.normals[0] + intU*(triangle.normals[1]-triangle.normals[0]) + intV*(triangle.normals[2]-triangle.normals[0]);
+        } else 
+        {
+            closestIntersection.intersectionNormal = triangle.calculateNormal();
+        }
+    }
+   
+
 
     return closestIntersection;
 }

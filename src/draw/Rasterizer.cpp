@@ -32,8 +32,8 @@ void draw(World& world, DrawingWindow& window, bool showWireframe)
         // break;
     }
 
-    // CanvasTriangle canvasTriangle = utilities::convertToCanvasTriangle(world.getMesh()[1], world.camera, window);
-    // drawUtilities::drawPoint(canvasTriangle.vertices[1], window, Colour(255, 255, 0));
+    auto lightPoint = utilities::convertToCanvasPoint(world.light.location, world.camera, window);
+    drawUtilities::drawPoint(lightPoint, window, Colour(255,255,0));
 
     delete [] depthBuffer;
 }

@@ -8,6 +8,7 @@ class RayIntersection
 {
 public:
     glm::vec3 intersectionPoint;
+    glm::vec3 intersectionNormal;
     ModelTriangle intersectedTriangle;
     float distance;
     bool hasHit = false;

@@ -8,6 +8,7 @@
 #include "model/Camera.hpp"
 #include "model/Light.hpp"
 #include "model/World.hpp"
+#include "model/Sphere.h"
 #include "EventHandler.cpp"
 #include "Utilities.h"
 #include "draw/Drawer.hpp"
@@ -21,8 +22,9 @@ void update();
 const int WIDTH = 600;
 const int HEIGHT = 400;
 
-Camera camera = Camera(0.0f, 0.0f, 3.0f, 1.2f);
-Light light = Light(0.0f, 0.9f, 0.0f, 40.0f);
+Camera camera = Camera(0.0f, 0.0f, 3.5f, 1.2f);
+Light light = Light(0.0f, 0.9f, 0.0f, 30.0f);
+// Light light = Light(-0.4f, 1.0f, 1.5f, 35.0f);
 World world = World(camera, light);
 
 DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
@@ -37,9 +39,12 @@ int main(int argc, char *argv[])
     state["rotateAnimation"] = 0;
     state["displayMode"] = 0;
 
-    // world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
-    world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 1.0f, vec3(0.0f, 0.0f, -0.5f)));
+    Sphere sphere = Sphere(7, 7, vec3(0.31f, -0.09f, 0.4f), 0.3f, Colour(255, 255, 255));
+    world.addMesh(sphere.mesh);
+    world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
+    world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 1.0f, vec3(0.0f, 0.0f, -0.85f)));
     // world.addMesh(OBJFile("assets/Checkerboard/checkerboard.obj", 1.0f, vec3(0.0f, -0.4f, 0.0f)));
+
 
     EventHandler handler = EventHandler(window, world, state);
 
@@ -77,7 +82,7 @@ void update()
         return;
 
     // world.camera.translate(glm::vec3(1.0f, 0.0f, 0.0f), 0.3f);
-    world.camera.rotate(glm::vec3(0.0f, 0.0f, 0.0f), 1.5f);
+    world.camera.rotate(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
     world.camera.lookAt(glm::vec3(0.0f, 0.0f, 0.0f));
     world.transformMeshToCameraSpace();
 }

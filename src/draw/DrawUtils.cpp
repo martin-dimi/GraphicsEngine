@@ -93,9 +93,9 @@ namespace drawUtilities
 
     void drawPoint(CanvasPoint& point, DrawingWindow& window, Colour c)
     {
-        for(int y = point.y-2; y < point.y + 2; y++)
+        for(int y = point.y-4; y < point.y + 4; y++)
         {
-            for(int x = point.x-2; x < point.x + 2; x++)
+            for(int x = point.x-4; x < point.x + 4; x++)
             {
                 window.setPixelColour(x, y, c.getPackedInt());
             }

@@ -41,6 +41,16 @@ class World
             }
             this->texture = obj.texture;
         }
+
+        void addMesh(vector<ModelTriangle> const &mesh)
+        {
+            for(ModelTriangle triangle : mesh) {
+                this->mesh.push_back(triangle);
+                auto m = transformToCameraSpace(triangle);
+                // std::cout << m;
+                this->meshWithCameraPrespective.push_back(m);
+            }
+        }
         
         void transformMeshToCameraSpace()
         {
