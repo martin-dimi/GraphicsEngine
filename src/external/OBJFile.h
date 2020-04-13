@@ -20,6 +20,7 @@ class OBJFile
         string objName;
         unordered_map<string, Colour> pallete;
         vector<glm::vec3> vertecies;
+        vector<glm::vec3> normals;
         vector<glm::vec2> textureVertecies;
 
         float scale;
@@ -31,10 +32,12 @@ class OBJFile
         void readMaterials(ifstream* file);
         void readVertices(ifstream* file);
         void readFaces(ifstream* file);
+        void readNormals(ifstream* file);
 
         void readPallet(string materialName);
         Colour readColour(string* words);
         void readFace(string* words, Colour colour);
+        void readNormal(string* words);
         void readVertex(string* words);
         void readTextureVertex(string* words);
 

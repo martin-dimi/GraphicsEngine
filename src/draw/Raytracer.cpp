@@ -118,34 +118,33 @@ RayIntersection getClosestIntersection(Camera& camera, Ray& ray, World& world, i
 
             intU = u;
             intV = v;
-
-            if(triangle.isTextured)
-            {
-                vec2 te0 = triangle.texture[1] - triangle.texture[0];
-                vec2 te1 = triangle.texture[2] - triangle.texture[0];
-                vec2 textureIntersection = triangle.texture[0] + (te0 * u) + (te1 * v);
-
-                Colour texture = world.texture.getPixelValueAt(textureIntersection);
-                closestIntersection.intersectionColour = texture;
-            }
-            else 
-            {
-                closestIntersection.intersectionColour = Colour(triangle.colour);
-            }
         }
     }
 
     if(closestIntersection.hasHit) 
     {
         ModelTriangle &triangle = closestIntersection.intersectedTriangle;
-        // Calculate normals
+
+        // Calculate normal
         if(triangle.hasNormals)
         {
-            closestIntersection.intersectionNormal = triangle.normals[0] + intU*(triangle.normals[1]-triangle.normals[0]) + intV*(triangle.normals[2]-triangle.normals[0]);
+            vec3 normal1 = triangle.normals[1]-triangle.normals[0];
+            vec3 normal2 = triangle.normals[2]-triangle.normals[0];
+            closestIntersection.intersectionNormal = triangle.normals[0] + intU*normal1 + intV*normal2;
         } else 
-        {
             closestIntersection.intersectionNormal = triangle.calculateNormal();
-        }
+
+        // Calculate colour
+        if(triangle.isTextured)
+        {
+            vec2 te0 = triangle.texture[1] - triangle.texture[0];
+            vec2 te1 = triangle.texture[2] - triangle.texture[0];
+            vec2 textureIntersection = triangle.texture[0] + (te0 * intU) + (te1 * intV);
+
+            Colour texture = world.texture.getPixelValueAt(textureIntersection);
+            closestIntersection.intersectionColour = texture;
+        } else 
+            closestIntersection.intersectionColour = Colour(triangle.colour);
     }
    
 

@@ -41,7 +41,13 @@ void OBJFile::read()
         file.clear();
         file.seekg(0);
 
-        // Read faces
+        // Read normals and faces
+        readNormals(&file);
+
+        // Reset file
+        file.clear();
+        file.seekg(0);
+
         readFaces(&file);
     }
     else cout << "No such OBJ file: " << path + objName << endl;
@@ -70,7 +76,20 @@ void OBJFile::readVertices(ifstream* file)
         string* words = split(line, ' ');
 
         if(words[0] == "v") readVertex(words);
-        if(words[0] == "vt") readTextureVertex(words);
+        else if(words[0] == "vt") readTextureVertex(words);
+    }
+}
+
+void OBJFile::readNormals(ifstream* file)
+{
+    string line;
+
+    while(getline(*file, line))
+    {
+        if(line.size() == 0) continue;
+        string* words = split(line, ' ');
+
+        if(words[0] == "f") readNormal(words);
     }
 }
 
@@ -105,6 +124,7 @@ void OBJFile::readVertex(string* words)
 
     glm::vec3 v = glm::vec3(x, y, z);
     this->vertecies.push_back(v);
+    this->normals.push_back(vec3(0.0f,0.0f,0.0f));
 }
 
 void OBJFile::readTextureVertex(string* words) 
@@ -127,6 +147,30 @@ Colour OBJFile::readColour(string* words)
     return Colour(255, 255, 255);
 }
 
+void OBJFile::readNormal(string* words)
+{
+    int p1Index = stoi(words[1].substr(0, words[1].find('/'))) - 1;
+    int p2Index = stoi(words[2].substr(0, words[2].find('/'))) - 1;
+    int p3Index = stoi(words[3].substr(0, words[3].find('/'))) - 1;
+
+    if(p2Index >= vertecies.size() || p1Index >= vertecies.size() || p1Index >= vertecies.size())
+    {
+        cout << "Accessing an undefined vertex" << endl;
+        return;
+    }
+
+    glm::vec3 p1 = vertecies[p1Index];
+    glm::vec3 p2 = vertecies[p2Index];
+    glm::vec3 p3 = vertecies[p3Index];
+
+    ModelTriangle triangle = ModelTriangle(p1, p2, p3, Colour());
+    glm::vec3 normal = triangle.calculateNormal();
+
+    normals[p1Index] += normal;
+    normals[p2Index] += normal;
+    normals[p3Index] += normal;
+}
+
 void OBJFile::readFace(string* words, Colour colour)
 {
     int p1Index = stoi(words[1].substr(0, words[1].find('/'))) - 1;
@@ -144,6 +188,10 @@ void OBJFile::readFace(string* words, Colour colour)
     glm::vec3 p3 = vertecies[p3Index];
 
     ModelTriangle triangle = ModelTriangle(p1, p2, p3, colour);
+    triangle.normals[0] = glm::normalize(normals[p1Index]);
+    triangle.normals[1] = glm::normalize(normals[p2Index]);
+    triangle.normals[2] = glm::normalize(normals[p3Index]);
+    triangle.hasNormals = true;
     triangle.id = faces.size();
 
     // Check if it has a texture coordinate
