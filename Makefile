@@ -53,6 +53,7 @@ debug: window
 # Rule to build for high performance executable
 speedy: window
 	$(COMPILER) $(COMPILER_OPTIONS) $(SPEEDY_OPTIONS) -o $(OBJECT_FILE) $(SOURCE_FILE) $(SDL_COMPILER_FLAGS) $(SDW_COMPILER_FLAGS) $(GLM_COMPILER_FLAGS)
+	mv *.o binary/
 	$(COMPILER) $(LINKER_OPTIONS) $(SPEEDY_OPTIONS) -o $(EXECUTABLE) $(OBJECT_FILE) $(SDL_LINKER_FLAGS) $(SDW_LINKER_FLAGS)
 	./$(EXECUTABLE)
 

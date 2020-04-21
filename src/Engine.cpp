@@ -19,11 +19,11 @@ using namespace glm;
 void draw();
 void update();
 
-const int WIDTH = 600;
-const int HEIGHT = 400;
+const int WIDTH = 640;
+const int HEIGHT = 480;
 
 Camera camera = Camera(0.0f, 0.0f, 3.5f, 1.2f);
-Light light = Light(0.0f, 0.9f, 0.0f, 35.0f);
+Light light = Light(0.0f, 0.2f, 0.0f, 35.0f);
 // Light light = Light(-0.4f, 1.0f, 1.5f, 35.0f);
 World world = World(camera, light);
 
@@ -39,13 +39,14 @@ int main(int argc, char *argv[])
     state["rotateAnimation"] = 0;
     state["displayMode"] = 0;
 
-    // Sphere sphere = Sphere(15, 15, vec3(0.0f, 0.0f, 0.0f), 1, Colour(230, 70, 160));
-    Sphere sphere = Sphere(12, 12, vec3(0.31f, -0.09f, 0.4f), 0.3f, Colour(180, 70, 160));
-    world.addMesh(sphere.mesh);
+    Sphere sphere = Sphere(15, 15, vec3(0.0f, 0.0f, 0.0f), 1, Colour(230, 70, 160));
+    // Sphere sphere = Sphere(12, 12, vec3(0.31f, -0.09f, 0.4f), 0.3f, Colour(180, 70, 160));
+    // world.addMesh(sphere.mesh);
     // world.addMesh(OBJFile("assets/Panter/panter2.obj", 1.0f));
-    world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
+    // world.addMesh(OBJFile("assets/CornellBox/cornell-box.obj", 1.0f));
     // world.addMesh(OBJFile("assets/HackSpaceLogo/logo.obj", 1.0f, vec3(0.0f, 0.0f, -0.85f)));
     // world.addMesh(OBJFile("assets/Checkerboard/checkerboard.obj", 1.0f, vec3(0.0f, -0.4f, 0.0f)));
+    world.addMesh(OBJFile("assets/Triangle/triangle.obj", 1.0f, vec3(0.0f, -0.2f, 0.0f)));
 
 
     EventHandler handler = EventHandler(window, world, state);

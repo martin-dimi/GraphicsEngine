@@ -5,8 +5,9 @@
 #include "model/Camera.hpp"
 #include "external/OBJFile.h"
 #include "external/PPMImage.h"
-
 #include <glm/glm.hpp>
+#include "Utilities.h"
+
 #include <vector>
 
 using namespace std;
@@ -22,6 +23,10 @@ class World
             triangle.vertices[0] = (triangle.vertices[0] - camera.position) * camera.orientation;
             triangle.vertices[1] = (triangle.vertices[1] - camera.position) * camera.orientation;
             triangle.vertices[2] = (triangle.vertices[2] - camera.position) * camera.orientation;
+
+            triangle.normals[0] = glm::normalize(triangle.normals[0] * camera.orientation);
+            triangle.normals[1] = glm::normalize(triangle.normals[1] * camera.orientation);
+            triangle.normals[2] = glm::normalize(triangle.normals[2] * camera.orientation);
 
             return triangle;
         } 

@@ -130,7 +130,7 @@ RayIntersection getClosestIntersection(Camera& camera, Ray& ray, World& world, i
         {
             vec3 normal1 = triangle.normals[1]-triangle.normals[0];
             vec3 normal2 = triangle.normals[2]-triangle.normals[0];
-            closestIntersection.intersectionNormal = triangle.normals[0] + intU*normal1 + intV*normal2;
+            closestIntersection.intersectionNormal = normalize(triangle.normals[0] + (normal1 * intU) + (normal2 * intV));
         } else 
             closestIntersection.intersectionNormal = triangle.calculateNormal();
 
