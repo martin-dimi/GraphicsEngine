@@ -33,8 +33,8 @@ void draw(World& world, DrawingWindow& window)
 void raytrace(int x, int y, DrawingWindow& window, World& world)
 {
     // std::cout << "RayTracing X:" << x << ", Y: " << y << std::endl;
-    // RayIntersection intersection = aliasRGSS(x, y, window, world);
-    RayIntersection intersection = noAliasing(x, y, window, world);
+    RayIntersection intersection = aliasRGSS(x, y, window, world);
+    // RayIntersection intersection = noAliasing(x, y, window, world);
 
     if(intersection.hasHit)
         window.setPixelColour(x, y, intersection.intersectionColour.getPackedInt(intersection.intersectionBrightness));
