@@ -6,6 +6,7 @@
 #include "external/PPMImage.h"
 #include "external/OBJFile.h"
 #include "Utilities.h"
+#include "Animator.hpp"
 
 using namespace std;
 using namespace glm;
@@ -15,13 +16,14 @@ class EventHandler {
     private:
         DrawingWindow &window;
         World &world;
+        Animator &animator;
         unordered_map<string, int> &state;
 
         SDL_Event event;
         
 
     public:
-        EventHandler(DrawingWindow &window, World &world, unordered_map<string, int> &state) : window(window), world(world), state(state)
+        EventHandler(DrawingWindow &window, World &world, Animator &animator, unordered_map<string, int> &state) : window(window), world(world), animator(animator), state(state)
         {
             this->event = SDL_Event();
         }
@@ -46,6 +48,9 @@ class EventHandler {
                 else if (event.key.keysym.sym == SDLK_r)        resetCamera();
                 else if (event.key.keysym.sym == SDLK_d)        panCamera(1);
                 else if (event.key.keysym.sym == SDLK_a)        panCamera(-1);
+                else if (event.key.keysym.sym == SDLK_q)        tiltCamera(1);
+                else if (event.key.keysym.sym == SDLK_e)        tiltCamera(-1);
+                else if (event.key.keysym.sym == SDLK_t)        animator.isRunning=!animator.isRunning;
                 else if (event.key.keysym.sym == SDLK_f)        
                 {
                     world.camera.lookAt(vec3(0.0f, 0.0f, 0.0f));
@@ -69,6 +74,7 @@ class EventHandler {
         {
             world.camera.translate(direction, 0.1f);
             world.transformMeshToCameraSpace();
+            std::cout << "Camera position: " << utilities::printVec(world.camera.position);
         }
 
         void resetCamera()
@@ -83,6 +89,13 @@ class EventHandler {
         void panCamera(int dir)
         {
             world.camera.pan(3 * dir);
+            world.transformMeshToCameraSpace();
+            // std::cout << "Camera orientation: " << utilities::printVec(world.camera.orientation);
+        }
+
+        void tiltCamera(int dir)
+        {
+            world.camera.tilt(3 * dir);
             world.transformMeshToCameraSpace();
         }
 

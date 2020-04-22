@@ -25,7 +25,7 @@ std::vector<CanvasPoint> interpolate(CanvasPoint from, CanvasPoint to)
     int xDiff = to.x - from.x;
     int yDiff = to.y - from.y;
 
-    float steps = max(abs(xDiff), abs(yDiff));
+    float steps = std::max(abs(xDiff), abs(yDiff));
 
     float xStepSize = xDiff / steps;
     float yStepSize = yDiff / steps;
@@ -54,6 +54,32 @@ std::vector<vec3> interpolate(glm::vec3 from, glm::vec3 to, int steps)
     }
 
     return numbers;
+}
+
+std::vector<Colour> interpolate(Colour from, Colour to, int steps)
+{
+    std::vector<Colour> colours;
+
+    int diffR = to.red - from.red;
+    int diffG = to.green - from.green;
+    int diffB = to.blue - from.blue;
+
+    float divisor = 1 / float(steps - 1);
+    float incrementR = steps == 1 ? diffR : diffR * divisor;
+    float incrementG = steps == 1 ? diffG : diffG * divisor;
+    float incrementB = steps == 1 ? diffB : diffB * divisor;
+
+    for(int step=0; step < steps; step++) 
+    {
+        Colour c = Colour(
+            from.red + step * incrementR,
+            from.green + step * incrementG,
+            from.blue + step * incrementB);
+
+        colours.push_back(c);
+    }
+
+    return colours;
 }
 
 void interpolate(std::vector<CanvasPoint>& points, CanvasPoint from, CanvasPoint to, int steps)
@@ -92,6 +118,18 @@ void interpolate(std::vector<CanvasPoint>& points, CanvasPoint from, CanvasPoint
         points.push_back(cur);
     }
 }
+
+void interpolate(std::vector<Sphere>& spheres, Sphere from, Sphere to, int steps)
+{
+    vector<float> scales = utilities::interpolate(from.scale, to.scale, steps);
+    vector<Colour> colours = utilities::interpolate(from.colour, to.colour, steps);
+    vector<float> divisions = utilities::interpolate(from.latDivisions, to.latDivisions, steps);
+
+    for(int step=0; step<steps; step++) {
+        spheres.push_back(Sphere(divisions[step], divisions[step], vec3(0.0f, 0.0f, 0.0f), scales[step], colours[step]));
+    }
+}
+
 
 CanvasPoint getTriangleMidPoint(CanvasTriangle triangle)
 {

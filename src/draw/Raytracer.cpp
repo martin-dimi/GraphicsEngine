@@ -32,8 +32,8 @@ void draw(World& world, DrawingWindow& window)
 // PRIVATE
 void raytrace(int x, int y, DrawingWindow& window, World& world)
 {
-    // std::cout << "RayTracing X:" << x << ", Y: " << y << std::endl;
     RayIntersection intersection = aliasRGSS(x, y, window, world);
+    // RayIntersection intersection = aliasQuincunx(x, y, window, world);
     // RayIntersection intersection = noAliasing(x, y, window, world);
 
     if(intersection.hasHit)
@@ -193,19 +193,15 @@ RayIntersection aliasQuincunx(float x, float y, DrawingWindow& window, World& wo
             float w = 0.125f;
             if(i==0) w = 0.5f;
 
-            colour.red += w * intersection.intersectedTriangle.colour.red;
-            colour.green += w * intersection.intersectedTriangle.colour.green;
-            colour.blue += w * intersection.intersectedTriangle.colour.blue;
+            colour.red += w * intersection.intersectionColour.red;
+            colour.green += w * intersection.intersectionColour.green;
+            colour.blue += w * intersection.intersectionColour.blue;
             brightness += w * intersection.intersectionBrightness;
         }
     }
 
     if(haveHit > 0)
     {
-        // colour.red = std::round(colour.red / haveHit);
-        // colour.green = std::round(colour.green / haveHit);
-        // colour.blue = std::round(colour.blue / haveHit);
-
         middle.intersectionColour = colour;
         middle.intersectionBrightness = brightness;
     } 
@@ -243,19 +239,15 @@ RayIntersection aliasRGSS(float x, float y, DrawingWindow& window, World& world)
         {
             haveHit++;
 
-            colour.red += w * intersection.intersectedTriangle.colour.red;
-            colour.green += w * intersection.intersectedTriangle.colour.green;
-            colour.blue += w * intersection.intersectedTriangle.colour.blue;
+            colour.red += w * intersection.intersectionColour.red;
+            colour.green += w * intersection.intersectionColour.green;
+            colour.blue += w * intersection.intersectionColour.blue;
             brightness += w * intersection.intersectionBrightness;
         }
     }
 
     if(haveHit > 0)
     {
-        // colour.red = std::round(colour.red / haveHit);
-        // colour.green = std::round(colour.green / haveHit);
-        // colour.blue = std::round(colour.blue / haveHit);
-
         middle.intersectionColour = colour;
         middle.intersectionBrightness = brightness;
     } 

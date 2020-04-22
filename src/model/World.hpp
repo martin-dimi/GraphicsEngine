@@ -56,6 +56,12 @@ class World
                 this->meshWithCameraPrespective.push_back(m);
             }
         }
+
+        void clearMesh()
+        {
+            this->mesh.clear();
+            this->meshWithCameraPrespective.clear();
+        }
         
         void transformMeshToCameraSpace()
         {

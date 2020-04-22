@@ -6,22 +6,22 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "ModelTriangle.h"
-#include "Utilities.h"
 
 using namespace glm;
 using namespace std;
 
 class Sphere 
 {
-    private:
+    public:
+    float scale;
+    Colour colour;
     int latDivisions;
     int longDivisions;
     vec3 position;
-    float scale;
-    Colour colour;
+
+    private:
     vec3 max;
     vec3 min;
-
     vector<vec3> vertices;
 
     void generateVertices()
