@@ -39,8 +39,6 @@ void draw(World& world, DrawingWindow& window, bool showWireframe)
             drawUtilities::drawTriangleTextured(canvasTriangle, world.texture, window, depthBuffer);
         else
             drawUtilities::drawTriangleFilled(canvasTriangle, window, depthBuffer);
-
-        // break;
     }
 
     auto lightPoint = utilities::convertToCanvasPoint(world.light.location, world.camera, window);

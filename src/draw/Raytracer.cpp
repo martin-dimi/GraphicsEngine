@@ -32,6 +32,7 @@ void draw(World& world, DrawingWindow& window)
 // PRIVATE
 void raytrace(int x, int y, DrawingWindow& window, World& world)
 {
+    // Select aliasing...
     RayIntersection intersection = aliasRGSS(x, y, window, world);
     // RayIntersection intersection = aliasQuincunx(x, y, window, world);
     // RayIntersection intersection = noAliasing(x, y, window, world);
